@@ -1,0 +1,654 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>reveal.js</title>
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/blood.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <section>
+            <h2>JavaScript - Basics</h2>
+            <h3>(ECMA script 2015 – ES6)</h3>
+        </section>
+
+
+        <section>
+            <section>
+                <h3>Content</h3>
+                <ol>
+                    <li>HTML ↔ JavaScript binding</li>
+                    <li>Syntax basics</li>
+                    <li>Functions</li>
+                    <li>Scope and closures</li>
+                    <li>Objects</li>
+                    <li>Arrays</li>
+                </ol>
+            </section>
+            <section>
+                <h3>Content</h3>
+                <ol start="7">
+                    <li>Operators</li>
+                    <li>Events</li>
+                    <li>Promise</li>
+                    <li>Modules</li>
+                    <li>DOM objects</li>
+                    <li>XMLHTTPRequest</li>
+                </ol>
+            </section>
+        </section>
+
+
+        <section>
+            <section>
+                <h1>1</h1>
+                <h2>HTML ↔ JavaScript binding</h2>
+            </section>
+            <section>
+                <h3>Script elements</h3>
+                External file:
+                <pre><code class="html" data-trim data-noescape>
+                    &lt;script <mark>type="text/javascript"</mark> src="myScript.js"&gt;&lt;/script&gt;
+                </code></pre>
+
+                Inline JavaScript:
+                <pre><code class="html" data-trim data-noescape>
+                    &lt;script <mark>type="text/javascript"</mark>&gt;
+                        document.getElementById('demo').innerHTML = 'My First JavaScript';
+                    &lt;/script&gt;
+                </code></pre>
+
+                <ul>
+                    <li>Inside
+                        <code class="html">&lt;head&gt;</code>
+                        or anywhere inside
+                        <code class="html">&lt;body&gt;</code>
+                    </li>
+                </ul>
+            </section>
+            <section>
+                <h3>Attributes</h3>
+                <pre><code class="html" data-trim data-noescape>
+                    &lt;button type="button" <mark>onclick="myFunction(this, event)"</mark>&gt;
+                        Click me!
+                    &lt;/button&gt;
+                </code></pre>
+
+                <ul>
+                    <li>All <code class="html">on...=""</code> attributes</li>
+                    <li>Accessible scope: global → <b>window</b></li>
+                    <li><b>this</b> - Reference to the target DOM element</li>
+                    <li><b>event</b> - Reference to the Event object</li>
+                </ul>
+                <a href="https://www.w3schools.com/jsref/dom_obj_event.asp">https://www.w3schools.com/jsref/dom_obj_event.asp</a>
+            </section>
+        </section>
+
+
+        <section>
+            <section>
+                <h1>2</h1>
+                <h2>Syntax basics</h2>
+            </section>
+            <section>
+                <h3>Variables</h3>
+                <pre><code class="javascript" data-trim>
+                    var x;
+                    x = 6;
+                    var y,
+                        z = 8;
+                    var a = 'Some string';
+                </code></pre>
+
+                ES2015/ES6:
+                <pre><code class="javascript" data-trim>
+                    let x;
+                    x = 6;
+
+                    const z = 8;
+                </code></pre>
+
+                <ul>
+                    <li><b>var</b> is scoped/visible to the nearest function block</li>
+                    <li><b>let</b> is scoped/visible to the nearest enclosing block</li>
+                </ul>
+            </section>
+            <section>
+                <h3><code>let</code> vs. <code>var</code></h3>
+                <pre><code class="javascript" data-trim>
+                    function myFunction() {
+                        //a is *not* visible out here
+                        //b is *not* visible here
+                        //c is visible here, but the value is undefined
+                        for( let a = 0; a < 5; a++ ) {
+                            //a is only visible in here (and in the for() parentheses)
+                            //and there is a separate a variable for each iteration of
+                            //the loop
+                            //c is visible here
+                        }
+                        //a is *not* visible out here
+                        //c is visible here, but the value is undefined
+                        let b = 5;
+                        var c = 10;
+                    }
+                </code></pre>
+            </section>
+            <section>
+                <h3>Primitive types</h3>
+                <pre><code class="javascript" data-trim>
+                    // boolean
+                    let isDone = false;
+
+                    // number
+                    let decimal = 8; // or Infinity, NaN
+                    let hex = 0xf00d;
+                    let binary = 0b1010; // new in ES2015/ES6
+                    let octal = 0o744; // new in ES2015/ES6
+
+                    // string
+                    let color = 'blue';
+
+                    // undefined, null
+                    let x; // undefined
+                    let y = null;
+                </code></pre>
+            </section>
+            <section>
+                <h3>RegExp</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    let regExp = /.*/gi; // In form /pattern/modifiers, without quotes
+                    let regExp = new RegExp('.*', 'gi');
+
+                     // returns true/false if matches
+                    regExp.<mark>test</mark>('The best things in life are free!');
+
+                    // returns first matched text or null
+                    /e/.<mark>exec</mark>('The best things in life are free!');
+
+                    // Returns an array containing matches
+                    let urlExp = /^((https?)\:\/\/)?(([^:\/?#]*)(?:\:([0-9]+))?)...$/
+                    let urlParts = 'https://dbg.com:8080/somePath'.<mark>match(urlExp)</mark>;
+                    let protocol = urlParts[2];
+                </code></pre>
+
+                <a href="https://www.w3schools.com/jsref/jsref_obj_regexp.asp">https://www.w3schools.com/jsref/jsref_obj_regexp.asp</a>
+            </section>
+            <section>
+                <h3>Date</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    let date = new Date();
+                    date.toUTCString();
+                </code></pre>
+
+                <a href="https://www.w3schools.com/jsref/jsref_obj_date.asp">https://www.w3schools.com/jsref/jsref_obj_date.asp</a>
+            </section>
+            <section>
+                <h3><code>for</code> statements</h3>
+                <pre><code class="javascript" data-trim>
+                    for (i = 0; i < cars.length; i++) {
+                        text += cars[i] + '<br>';
+                        break;
+                        continue;
+                    }
+                </code></pre>
+            </section>
+            <section>
+                <h3><code>while</code> statements</h3>
+                <pre><code class="javascript" data-trim>
+                    while (i < 10) {
+                        text += 'The number is ' + i;
+                        i++;
+                        break;
+                        continue;
+                    }
+
+                    do {
+                        text += 'The number is ' + i;
+                        i++;
+                        break;
+                        continue;
+                    }
+                    while (i < 10);
+                </code></pre>
+            </section>
+            <section>
+                <h3><code>if</code> statements</h3>
+                <pre><code class="javascript" data-trim>
+                    if (hour < 18) {
+                        greeting = 'Good day';
+                    } else {
+                       greeting = 'Good evening';
+                    }
+                </code></pre>
+            </section>
+            <section>
+                <h3><code>switch</code> statements</h3>
+                <pre><code class="javascript" data-trim>
+                    switch (new Date().getDay()) {
+                        case 0:
+                            day = 'Sunday';
+                            break;
+                        case 1:
+                            day = 'Monday';
+                            break;
+                        ...
+                        default:
+                            day = 'Saturday';
+                    }
+                </code></pre>
+                Expression can evaluate to any type. For cases a strict comparison (using <code>===</code>) is done.
+            </section>
+            <section>
+                <h3><code>switch</code> statements</h3>
+                <pre><code class="javascript" data-trim>
+                    let a = 100;
+                    let b = NaN;
+                    switch (true) {
+                        case isNaN(a) || isNaN(b): // === true
+                            console.log('NaNNaN');
+                            break;
+                        case a === b: // === true
+                            console.log(0);
+                            break;
+                        case a < b: // === true
+                            console.log(-1);
+                            break;
+                        default:
+                            console.log(1);
+                    }
+                </code></pre>
+            </section>
+        </section>
+
+
+        <section>
+            <section>
+                <h1>3</h1>
+                <h2>Functions</h2>
+            </section>
+            <section>
+                <h3>Function Syntax</h3>
+                <pre><code class="javascript" data-trim>
+                    function name(parameter1, parameter2, parameter3) {
+                        code to be executed
+                    }
+                </code></pre>
+                <pre><code class="javascript" data-trim>
+                    let name = function (parameter1, parameter2, parameter3) {
+                        code to be executed
+                    }
+                </code></pre>
+                <pre><code class="javascript" data-trim>
+                    name(1, 'a', new Date());
+                </code></pre>
+            </section>
+            <section>
+                <h3>ES2015/ES6</h3>
+                <pre><code class="javascript" data-trim>
+                    let name = (parameter1, parameter2, parameter3) => {
+                        code to be executed
+                    }
+                </code></pre>
+                <pre><code class="javascript" data-trim>
+                    let name = (parameter1, parameter2) => parameter1 + parameter2;
+                </code></pre>
+                <pre><code class="javascript" data-trim>
+                    let name = parameter1 => parameter1.toString();
+                </code></pre>
+                <pre><code class="javascript" data-trim>
+                    name(new Date());
+                </code></pre>
+            </section>
+            <section>
+                <h3>Complex examples</h3>
+                <pre><code class="javascript" data-trim>
+                    // Returns a function
+                    let getRandomGenerator = () => {
+                        return () => Math.random();
+                    };
+
+                    // Parameter is a function
+                    let generate = (generator) => generator();
+
+                    // Call the generate method
+                    console.log(generate(getRandomGenerator()));
+                    // Call the generate with different generator method
+                    console.log(generate(() => Math.ceil(Math.random() * 100)));
+                </code></pre>
+                <button onclick="randomGenOut1Click(this)">Click me!</button>
+                <button onclick="randomGenOut2Click(this)">Click me!</button>
+                <script>
+                    // Returns a function
+                    let getRandomGenerator = () => {
+                        return () => Math.random();
+                    };
+
+                    // Parameter is a function
+                    let generate = (generator) => generator();
+
+                    function randomGenOut1Click(element) {
+                        element.innerHTML = generate(getRandomGenerator());
+                    }
+
+                    function randomGenOut2Click(element) {
+                        element.innerHTML = generate(() => Math.ceil(Math.random() * 100));
+                    }
+                </script>
+            </section>
+        </section>
+
+
+        <section>
+            <section>
+                <h1>4</h1>
+                <h2>Scope and closures</h2>
+            </section>
+            <section>
+                <h3>Scope</h3>
+                <pre><code class="javascript" data-trim>
+                    let a = 1; // Global scope: everything registered under
+                    // window/script, eg. window.a = 1 (script in case of let)
+                    function f1() {
+                        let b = 2 + a; // Outer function scope
+                        // a is *not* visible here
+
+                        return () => {
+                            b += 2;
+                            let c = a + b; // Inner function scope
+                            return c;
+                        };
+                        // c is *not* visible here
+                    }
+                    // b is *not* visible here
+                    // c is *not* visible here
+                </code></pre>
+            </section>
+            <section>
+                <h3>Closures</h3>
+                Closures are functions that refer to independent (free) variables (variables that are used locally, but
+                defined in an enclosing scope). In other words, these functions 'remember' the environment in which they
+                were created.
+                <pre><code class="javascript" data-trim>
+                    // Global scope: everything registered under window/script,
+                    // eg. window.a (script in case of let)
+                    let f2 = f1(); // A new closure created!
+                    a = f2(); // a and b were modified => window.a = 6, f2.f1.b = 5
+
+                    a = f2(); // a and b were modified => window.a = 13, f2.f1.b = 7
+
+                    let f3 = f1(); // A new closure created! f2.f1 !== f3.f1
+                </code></pre>
+            </section>
+            <section>
+                <h3>Closures</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    let a = 1; // Global scope
+                    function f1() {<div style="border: 0.3rem solid #6ca0e8">    let b = 2 + a; // Outer function scope
+                        // a is *not* visible here
+
+                        return () => {<div style="border: 0.3rem solid #cb4b16">        b += 2;
+                            let c = a + b; // Inner function scope
+                            <mark>debugger;</mark>
+                            return c;
+                    </div>    };</div>}
+                    let f2 = f1();
+                    let f3 = f1();
+                </code></pre>
+                <script>
+                    let a = 1; // Global scope
+                    function f1() {
+                        let b = 2 + a; // Outer function scope
+                        // a is *not* visible here
+
+                        return () => {
+                            b += 2;
+                            let c = a + b; // Inner function scope
+                            debugger;
+                            return c;
+                        };
+                    }
+                    let f2 = f1();
+                    let f3 = f1();
+                </script>
+                <button onclick="f2()">Click me (f2)!</button>
+                <button onclick="f3()">Click me (f3)!</button>
+            </section>
+        </section>
+
+
+        <section>
+            <section>
+                <h1>5</h1>
+                <h2>Objects</h2>
+            </section>
+            <section>
+                <h3>Object literals</h3>
+                <pre><code class="javascript" data-trim>
+                    var person = {
+                        firstName   : 'John',
+                        lastName    : 'Doe',
+                        age         : 50,
+                        eyeColor    : 'blue',
+                        doSomething : () => { ... }
+                    };
+
+                    let f = () => {
+                        a: 'b',
+                        c: 'd'
+                    };
+
+                    f({ ... });
+                </code></pre>
+            </section>
+            <section>
+                <h3>Construction function</h3>
+                <pre><code class="javascript" data-trim>
+                    function person(first, last, age, eye) {
+                        // this = {};
+                        this.firstName = first;
+                        this.lastName = last;
+                        this.age = age;
+                        this.eyeColor = eye;
+                        this.doSomething : () => { ... }
+                        // return this;
+                    }
+                    var myFather = new person('John', 'Doe', 50, 'blue');
+                    var myMother = new person('Sally', 'Rally', 48, 'green');
+
+                    myFather instanceof person === true
+                </code></pre>
+            </section>
+            <section>
+                <h3>Object.prototype</h3>
+                <ul>
+                    <li>All JavaScript objects inherit the properties and methods from their prototype.</li>
+                    <li>Objects created using an object literal, or with new Object(), inherit from a prototype called
+                        Object.prototype.
+                    </li>
+                    <li>The Object.prototype is on the top of the prototype chain.</li>
+                    <li>All JavaScript objects (Date, Array, RegExp, Function, ....) inherit from the
+                        Object.prototype.
+                    </li>
+                </ul>
+            </section>
+            <section>
+                <h3>Object.prototype</h3>
+                <pre><code class="javascript" data-trim>
+                    function Person(first, last, age, eye) {
+                        ...
+                    }
+
+                    Person.prototype.nationality = 'English';
+
+                    Person.prototype.name = function() {
+                        return this.firstName + ' ' + this.lastName;
+                    };
+
+                    var myFather = new Person('John', 'Doe', 50, 'blue');
+                    console.log(myFather.name());
+                </code></pre>
+            </section>
+            <section>
+                <h3>Prototype inheritance</h3>
+                <pre><code class="javascript" data-trim>
+                    function Teacher(first, last, age, gender, interests, subject) {
+                        Person.call(this, first, last, age, gender, interests);
+                        this.subject = subject;
+                    }
+
+                    Teacher.prototype = Object.create(Person.prototype);
+                    Teacher.prototype.constructor = Teacher;
+
+                    Teacher.prototype.greeting = function() { ... }
+                </code></pre>
+            </section>
+            <section>
+                <h3>ES2015/ES6 Class</h3>
+                <pre><code class="javascript" data-trim>
+                    class Person {
+                        constructor (first, last, age, eye) {
+                            this.first  = first;
+                            ...
+                        }
+
+                        name() {
+                            return this.firstName + ' ' + this.lastName;
+                        }
+                    }
+
+                    let myFather = new Person('John', 'Doe', 50, 'blue');
+                </code></pre>
+            </section>
+            <section>
+                <h3>Class inheritance</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    class Teacher <mark>extends Person</mark> {
+                        constructor (first, last, age, eye) {
+                            <mark>super(first, last, age, eye);</mark>
+                        }
+
+                        greeting() {
+                            <mark>super.someMethod();</mark>
+                        }
+                    }
+                </code></pre>
+            </section>
+            <section>
+                <h3>Static methods</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    // ES6
+                    class Teacher extends Person {
+                        static myStaticMethod() { ... }
+                    }
+
+                    // ES5
+                    Teacher.myStaticMethod = function() { ... }
+
+                    Teacher.myStaticMethod();
+                </code></pre>
+            </section>
+            <section>
+                <h3>Getters and setters</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    class Rectangle {
+                        constructor (width, height) {
+                            this._width  = width
+                            this._height = height
+                        }
+                        set width  (width)  { this._width = width               }
+                        get width  ()       { return this._width                }
+                        set height (height) { this._height = height             }
+                        get height ()       { return this._height               }
+                        get area   ()       { return this._width * this._height }
+                    }
+
+                    var r = new Rectangle(50, 20)
+                    r.area === 1000
+                </code></pre>
+            </section>
+            <section>
+                <h3>Getters and setters - ES5</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    Object.defineProperty(Rectangle.prototype, 'width', {
+                        get: function () { return this._width; },
+                        set: function (width) { this._width = width; },
+                        enumerable: true,
+                        configurable: true
+                    });
+                    ...
+                    Object.defineProperty(Rectangle.prototype, 'area', {
+                        get: function () { return this._width * this._height; },
+                        enumerable: true,
+                        configurable: true
+                    });
+                </code></pre>
+            </section>
+        </section>
+
+
+        <section>
+            <section>
+                <h1>6</h1>
+                <h2>Arrays</h2>
+            </section>
+            <section>
+            </section>
+        </section>
+    </div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+
+    Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Transition style
+        transition: 'convex', // none/fade/slide/convex/concave/zoom
+
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'convex', // none/fade/slide/convex/concave/zoom
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        dependencies: [
+            {src: 'plugin/markdown/marked.js'},
+            {src: 'plugin/markdown/markdown.js'},
+            {
+                src: 'plugin/highlight/highlight.js', async: true, callback: function () {
+                hljs.initHighlightingOnLoad();
+            }
+            }
+        ]
+    });
+</script>
+</body>
+</html>
