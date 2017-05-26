@@ -609,6 +609,98 @@
                 <h2>Arrays</h2>
             </section>
             <section>
+                <h3>Array literals vs. constructor</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    var cars = ['Saab', 'Volvo', 'BMW'];
+                    var cars = new Array('Saab', 'Volvo', 'BMW');
+
+                    cars[0]; // "Saab"
+                    cars[1] = 'Dacia';
+                </code></pre>
+            </section>
+            <section>
+                <h3>Array vs. object</h3>
+                <ul>
+                    <li>Keys are numbers</li>
+                    <li>Can have also non-numeric keys -> not part of the array</li>
+                </ul>
+                <pre><code class="javascript" data-trim data-noescape>
+                    let arr = [];
+                    arr[0] = 'a'
+                    arr[8]= 'b';
+                    console.log(arr); // ["a", undefined × 7, "b"]
+
+                    arr['test'] = 'c';
+                    console.log(arr); // ["a", undefined × 7, "b"]
+                    console.log(arr.test); // "c"
+                    console.log(Object.keys(arr)); // ["0", "8", "test"]
+
+                    // Array.prototype.length is the only "prototype" property of arrays
+                    arr.length === 9
+                </code></pre>
+            </section>
+            <section>
+                <h3>Array build-in methods (mutators)</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    Array.prototype.push([element1[, ...[, elementN]]])
+                    Array.prototype.unshift([element1[, ...[, elementN]]])
+
+                    Array.prototype.pop()
+                    Array.prototype.shift()
+                    Array.prototype.splice(start[, deleteCount[, item1[, item2[, ...]]]])
+
+                    Array.prototype.reverse()
+
+                    Array.prototype.sort((a, b) => { ... return someNumber; })
+                </code></pre>
+            </section>
+            <section>
+                <h3>Array build-in methods (accessors)</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    Array.prototype.indexOf(searchElement[, fromIndex])
+                    Array.prototype.lastIndexOf(searchElement[, fromIndex])
+
+                    Array.prototype.join([separator]) // Defaults to ','
+                    Array.prototype.slice([begin[, end]])
+                    Array.prototype.concat(value1[, value2[, ...[, valueN]]])
+                </code></pre>
+            </section>
+            <section>
+                <h3>Array build-in methods (Iteration methods)</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    Array.prototype.forEach((currentValue, index, array) => { ... });
+
+                    Array.prototype.some((currentValue, index, array) => boolean)
+                    Array.prototype.every((currentValue, index, array) => boolean)
+
+                    Array.prototype.find((currentValue, index, array) => boolean)
+                    Array.prototype.filter((currentValue, index, array) => boolean)
+
+                    Array.prototype.map((currentValue, index, array) => newValue)
+                    Array.prototype.reduce((accumulator, currentValue, index, array) =>
+                        accumulator, initialValue)
+                    Array.prototype.reduceRight(
+                        (accumulator, currentValue, index, array) =>
+                            accumulator, initialValue)
+                </code></pre>
+            </section>
+            <section>
+                <h3>Array.prototype.map</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    var persons = [
+                        {firstname : "Malcom", lastname: "Reynolds"},
+                        {firstname : "Kaylee", lastname: "Frye"},
+                        {firstname : "Jayne", lastname: "Cobb"}
+                    ];
+
+                    persons.map((item) => [item.firstname, item.lastname].join(" "));
+                </code></pre>
+            </section>
+            <section>
+                <h3>Array.prototype.reduce</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+
+                </code></pre>
             </section>
         </section>
     </div>
@@ -631,10 +723,7 @@
         help: true,
 
         // Transition style
-        transition: 'convex', // none/fade/slide/convex/concave/zoom
-
-        // Transition style for full page slide backgrounds
-        backgroundTransition: 'convex', // none/fade/slide/convex/concave/zoom
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
 
         // Number of slides away from the current that are visible
         viewDistance: 3,
