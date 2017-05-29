@@ -1342,6 +1342,62 @@
                 <h2>DOM model</h2>
             </section>
             <section>
+                <h3>HTML DOM</h3>
+                <ul>
+                    <li>All the elements of an HTML document are represented as DOM objects</li>
+                    <li>Root object is <code>window.document</code></li>
+                    <li>All DOM objects have properties, methods and events</li>
+                </ul>
+            </section>
+            <section>
+                <h3>Properties vs. Attributes</h3>
+                <ul>
+                    <li>Property is a value stored in a browser's memory (DOM object) and can be changed</li>
+                    <li>Attribute is set by developer in HTML and is used by browser as initial value for the
+                        corresponding property.
+                    </li>
+                </ul>
+                <hr>
+                Properties are often referenced as attributes, but the actual attributes are stored as DOM Attribute
+                nodes.
+            </section>
+            <section>
+                <h3><code>window.document</code></h3>
+                Represents the web page.
+                <pre><code class="javascript" data-trim>
+                    document.getElementById(id)             // Find an element
+                    document.getElementsByTagName(name)     // Find elements
+                    document.getElementsByClassName(name)
+                    document.querySelector(cssSelector)     // Find by css selectors
+
+                    document.createElement(element)         // Creates a new element
+                    document.appendChild(element)           // Appends a new child
+                    document.write(text)                    // Replace content
+                </code></pre>
+            </section>
+            <section>
+                <h3>Elements and nodes</h3>
+                <ul>
+                    <li>All DOM objects are <code>Node</code>s.</li>
+                    <li><code>Node.nodeType</code> represents the type of the node.</li>
+                    <li>Elements have type <code>Node.ELEMENT_NODE</code></li>
+                    <li>Attributes, comments, text nodes, etc. are also <code>Node</code> instances</li>
+                    <li>Attributes are stored in <code>Element.attributes</code></li>
+                    <li>Other nodes are stored in <code>Node.children</code></li>
+                </ul>
+            </section>
+            <section>
+                <h3>Useful properties</h3>
+                <pre><code class="javascript" data-trim>
+                    // element.style allow access to all CSS properties
+                    element.style.fontSize = '16px';
+                    element.classList   // Map based object for class manipulation
+
+                    element.value
+                    element.textContent
+                    element.innerHtml
+                    element.outerHtml
+                </code></pre>
             </section>
         </section>
 
