@@ -275,6 +275,26 @@
                     }
                 </code></pre>
             </section>
+            <section>
+                <h3>Semicolons</h3>
+                <pre><code class="javascript" data-trim>
+                    let a, b, c
+                    a = 5;
+                    b = 6
+                    c = a + b;
+                </code></pre>
+                <pre><code class="javascript" data-trim>
+                    let f1 = (a) => {
+                        return a
+                    }
+                    let f2 = (a) => {
+                        return
+                            a
+                    }
+                    f1(2) -> 2
+                    f2(2) -> undefined
+                </code></pre>
+            </section>
         </section>
 
 
@@ -699,8 +719,224 @@
             <section>
                 <h3>Array.prototype.reduce</h3>
                 <pre><code class="javascript" data-trim data-noescape>
+                    var names = ['Alice', 'Bob', 'Tiff', 'Bruce', 'Alice'];
 
+                    var countedNames = names.reduce((allNames, name) => {
+                      if (name in allNames) {
+                        allNames[name]++;
+                      } else {
+                        allNames[name] = 1;
+                      }
+                      return allNames;
+                    }, {});
+                    // countedNames is:
+                    // { 'Alice': 2, 'Bob': 1, 'Tiff': 1, 'Bruce': 1 }
                 </code></pre>
+            </section>
+        </section>
+
+
+        <section>
+            <section>
+                <h1>7</h1>
+                <h2>Operators</h2>
+            </section>
+            <section>
+                <h3>Arithmetic Operators</h3>
+                <table>
+                    <tbody>
+                    <tr>
+                        <th>Operator</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>+</td>
+                        <td>Addition</td>
+                    </tr>
+                    <tr>
+                        <td>-</td>
+                        <td>Subtraction</td>
+                    </tr>
+                    <tr>
+                        <td>*</td>
+                        <td>Multiplication</td>
+                    </tr>
+                    <tr>
+                        <td>/</td>
+                        <td>Division</td>
+                    </tr>
+                    <tr>
+                        <td>%</td>
+                        <td>Modulus</td>
+                    </tr>
+                    <tr>
+                        <td>++</td>
+                        <td>Increment</td>
+                    </tr>
+                    <tr>
+                        <td>--</td>
+                        <td>Decrement</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+            <section>
+                <h3>Assignment Operators</h3>
+                <table>
+                    <tbody>
+                    <tr>
+                        <th>Operator</th>
+                        <th>Example</th>
+                        <th>Same As</th>
+                    </tr>
+                    <tr>
+                        <td>=</td>
+                        <td>x = y</td>
+                        <td>x = y</td>
+                    </tr>
+                    <tr>
+                        <td>+=</td>
+                        <td>x += y</td>
+                        <td>x = x + y</td>
+                    </tr>
+                    <tr>
+                        <td>-=</td>
+                        <td>x -= y</td>
+                        <td>x = x - y</td>
+                    </tr>
+                    <tr>
+                        <td>*=</td>
+                        <td>x *= y</td>
+                        <td>x = x * y</td>
+                    </tr>
+                    <tr>
+                        <td>/=</td>
+                        <td>x /= y</td>
+                        <td>x = x / y</td>
+                    </tr>
+                    <tr>
+                        <td>%=</td>
+                        <td>x %= y</td>
+                        <td>x = x % y</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+            <section>
+                <h3>Comparison Operators</h3>
+                <table style="font-size: 70%">
+                    <tbody>
+                    <tr>
+                        <th>Operator</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>==</td>
+                        <td>equal to</td>
+                    </tr>
+                    <tr>
+                        <td>===</td>
+                        <td>equal value and equal type</td>
+                    </tr>
+                    <tr>
+                        <td>!=</td>
+                        <td>not equal</td>
+                    </tr>
+                    <tr>
+                        <td>!==</td>
+                        <td>not equal value or not equal type</td>
+                    </tr>
+                    <tr>
+                        <td>&gt;</td>
+                        <td>greater than</td>
+                    </tr>
+                    <tr>
+                        <td>&lt;</td>
+                        <td>less than</td>
+                    </tr>
+                    <tr>
+                        <td>&gt;=</td>
+                        <td>greater than or equal to</td>
+                    </tr>
+                    <tr>
+                        <td>&lt;=</td>
+                        <td>less than or equal to</td>
+                    </tr>
+                    <tr>
+                        <td>?</td>
+                        <td>ternary operator</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+            <section>
+                <h3>Type Operators</h3>
+                <table>
+                    <tbody>
+                    <tr>
+                        <th>Operator</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>typeof</td>
+                        <td>Returns the type of a variable</td>
+                    </tr>
+                    <tr>
+                        <td>instanceof</td>
+                        <td>Returns true if an object is an instance of an object type</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+        </section>
+
+
+        <section>
+            <section>
+                <h1>8</h1>
+                <h2>Events</h2>
+            </section>
+            <section>
+            </section>
+        </section>
+
+
+        <section>
+            <section>
+                <h1>9</h1>
+                <h2>Promise</h2>
+            </section>
+            <section>
+            </section>
+        </section>
+
+
+        <section>
+            <section>
+                <h1>10</h1>
+                <h2>Modules</h2>
+            </section>
+            <section>
+            </section>
+        </section>
+
+
+        <section>
+            <section>
+                <h1>11</h1>
+                <h2>DOM objects</h2>
+            </section>
+            <section>
+            </section>
+        </section>
+
+
+        <section>
+            <section>
+                <h1>12</h1>
+                <h2>XMLHTTPRequest</h2>
+            </section>
+            <section>
             </section>
         </section>
     </div>
