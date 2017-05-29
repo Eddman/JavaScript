@@ -121,7 +121,8 @@
                     x = 6;
                     var y,
                         z = 8;
-                    var a = 'Some string';
+                    a = 'Some string';
+                    var a; // Hoisting
                 </code></pre>
 
                 ES2015/ES6:
@@ -130,6 +131,9 @@
                     x = 6;
 
                     const z = 8;
+
+                    y = 8; // ReferenceError: y is not defined
+                    let y;
                 </code></pre>
 
                 <ul>
@@ -379,6 +383,82 @@
                     }
                 </script>
             </section>
+            <section>
+                <h3>Function's <code>this</code></h3>
+                <pre><code class="javascript" data-trim>
+                    console.log(this === window); // true; Global context
+
+                    function f1() {
+                        return this; // window
+                    }
+
+                    function f2() {
+                        'use strict'; // see strict mode
+                        return this; // undefined
+                    }
+
+                    f1.call({}, 1, 2); // this is replaced by {}
+                    f1.apply({}, [1, 2]); // this is replaced by {}
+                    f2.bind({});
+                    f2(); // this is replaced by {}
+                </code></pre>
+            </section>
+            <section>
+                <h3>Function's <code>this</code> in objects</h3>
+                <pre><code class="javascript" data-trim>
+                    function Car() {
+                        this.f = function() { return this };
+                    }
+
+                    let a = new Car();
+                    a.f() // this === a
+
+                    function f(x) { return x(); }
+                    f(a.f); // this === window / undefined
+                    f(a.f.bind(a)); // this === a
+                </code></pre>
+            </section>
+            <section>
+                <h3>ES2015/ES6 - Lexical this</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    <mark>this</mark>.nums.forEach((v) => {
+                        if (v % 5 === 0)
+                            <mark>this</mark>.fives.push(v)
+                    })
+                </code></pre>
+                ES5:
+                <pre><code class="javascript" data-trim data-noescape>
+                    //  variant 1
+                    <mark>var self = this;</mark>
+                    this.nums.forEach(function (v) {
+                        if (v % 5 === 0)
+                            <mark>self</mark>.fives.push(v);
+                    });
+
+                    //  variant 2 (since ECMAScript 5.1 only)
+                    this.nums.forEach(function (v) {
+                        if (v % 5 === 0)
+                            this.fives.push(v);
+                    }<mark>.bind(this)</mark>);
+                </code></pre>
+            </section>
+            <section>
+                <h3>ES2015/ES6 - Extended parameter handling</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    function f (x, y = 7, z = 42) { // ES6 default values
+                        // ES5: y = y || 7; ...
+                        return x + y + z
+                    }
+                    f(1) === 50
+                </code></pre>
+                <pre><code class="javascript" data-trim data-noescape>
+                    function f (x, y, ...a) { // ES6 rest parameter
+                        // ES5 a = Array.prototype.slice.call(arguments, 2);
+                        return (x + y) * a.length
+                    }
+                    f(1, 2, "hello", true, 7) === 9
+                </code></pre>
+            </section>
         </section>
 
 
@@ -457,6 +537,20 @@
                 <button onclick="f2()">Click me (f2)!</button>
                 <button onclick="f3()">Click me (f3)!</button>
             </section>
+            <section>
+                <h3>Block-scoped function (ES2015/ES6)</h3>
+                <pre><code class="javascript" data-trim>
+                    {
+                        function foo () { return 1 }
+                        foo() === 1
+                        {
+                            function foo () { return 2 }
+                            foo() === 2
+                        }
+                        foo() === 1
+                    }
+                </code></pre>
+            </section>
         </section>
 
 
@@ -477,8 +571,10 @@
                     };
 
                     let f = () => {
-                        a: 'b',
-                        c: 'd'
+                        a                            : 'b',
+                        c                            : 'd'
+                        [ 'string' + Math.random() ] : 'e' // ES 6
+                        myMethod (a, b) { ... }
                     };
 
                     f({ ... });
@@ -641,7 +737,7 @@
                     let cars = ['Saab', 'Volvo', 'BMW'];
                     let cars = new Array('Saab', 'Volvo', 'BMW');
 
-                    cars[0]; // "Saab"
+                    cars[0]; // 'Saab'
                     cars[1] = 'Dacia';
                 </code></pre>
             </section>
@@ -655,14 +751,14 @@
                     let arr = [];
                     arr[0] = 'a'
                     arr[8]= 'b';
-                    console.log(arr); // ["a", undefined × 7, "b"]
+                    console.log(arr); // ['a', undefined × 7, 'b']
 
                     arr['test'] = 'c';
-                    console.log(arr); // ["a", undefined × 7, "b"]
-                    console.log(arr.test); // "c"
-                    console.log(Object.keys(arr)); // ["0", "8", "test"]
+                    console.log(arr); // ['a', undefined × 7, 'b']
+                    console.log(arr.test); // 'c'
+                    console.log(Object.keys(arr)); // ['0', '8', 'test']
 
-                    // Array.prototype.length is the only "prototype" property of arrays
+                    // Array.prototype.length is the only 'prototype' property of arrays
                     arr.length === 9
                 </code></pre>
             </section>
@@ -1013,23 +1109,49 @@
             <section>
                 <h3>Booleans and conversion</h3>
                 <pre><code class="javascript" data-trim data-noescape>
-                    var x = ...;
+                    let x = ...;
 
                     if(<mark>!x</mark>) { // Evaluates to true if x is convertible to false
                         x = ...;
                     }
 
-                    // Logical or evaluates to the first operand that is convertible
+                    // Logical "or" evaluates to the first operand that is convertible
                     // to true
                     x = <mark>x || {}</mark>; // Evaluates to {} if x is convertible to false
 
                     // To check for null/undefined only
-                    //only undefined can be converted to null
+                    // Only undefined can be converted to null
                     if(x <mark>!=</mark> null) {  // x <mark>==</mark> null
                         ...
                     }
                 </code></pre>
             </section>
+            <section>
+                <h3>ES2015/ES6 - Spread Operator</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    let params = [ 'hello', true, 7 ]
+                    let other = [ 1, 2, ...params ] // [ 1, 2, 'hello', true, 7 ]
+                    f(1, 2, ...params) === 9
+
+                    let str = 'foo'
+                    let chars = [ ...str ] // [ 'f', 'o', 'o' ]
+                </code></pre>
+            </section>
+        </section>
+
+        <section>
+            <h3>ES5</h3>
+            <a href="https://www.w3schools.com/js/default.asp">https://www.w3schools.com/js/default.asp</a>
+
+            <h3>ES2015/ES6</h3>
+            <a href="http://es6-features.org">http://es6-features.org</a>
+
+            <h3>ES2016+</h3>
+            <a href="https://h3manth.com/new/blog/2015/es7-features/">https://h3manth.com/new/blog/2015/es7-features</a>
+        </section>
+
+        <section>
+            <h1>Browser API</h1>
         </section>
 
 
