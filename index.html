@@ -49,13 +49,14 @@
                 <b>Browser API</b>
                 <br>
                 <ol start="9">
+                    <li>BOM model</li>
                     <li>DOM model</li>
                     <li>Events</li>
                 </ol>
                 <hr>
                 <b>Advance topics</b>
                 <br>
-                <ol start="11">
+                <ol start="12">
                     <li>ES6 Promise</li>
                     <li>Modules</li>
                     <li>XMLHTTPRequest</li>
@@ -1222,7 +1223,7 @@
                 <h3>ES2015/ES6</h3>
                 <a href="http://es6-features.org">http://es6-features.org</a>
 
-                <h3>ES2016+</h3>
+                <h3>ES2016/ES7+</h3>
                 <a href="https://h3manth.com/new/blog/2015/es7-features/">https://h3manth.com/new/blog/2015/es7-features</a>
             </section>
         </section>
@@ -1235,6 +1236,109 @@
         <section>
             <section>
                 <h1>9</h1>
+                <h2>BOM model</h2>
+            </section>
+            <section>
+                <h3><code>window</code></h3>
+                <ul>
+                    <li>Represents browser's window.</li>
+                    <li>Equivalent to NodeJS's <code>global.</code></li>
+                    <li>All global JavaScript objects, functions, and variables automatically become properties and
+                        methods of the <code>window</code> object.
+                    </li>
+                </ul>
+                <pre><code class="javascript" data-trim>
+                    window.document === document
+                </code></pre>
+
+                <pre><code class="javascript" data-trim>
+                    window.alert('Alert message');
+                    window.confirm('Do you ... ?');
+                    window.prompt('Pleas enter ...');
+                    window.matchMedia('screen and (max-width:800px)');
+                </code></pre>
+            </section>
+            <section>
+                <h3>Timing Events</h3>
+                <pre><code class="javascript" data-trim>
+                    let handle = setTimeout(() => { ... }, 1000); // milliseconds
+                    clearTimeout(handle);
+                </code></pre>
+                <pre><code class="javascript" data-trim>
+                    let handle = setInterval(() => { ... }, 1000); // milliseconds
+                    clearInterval(handle);
+                </code></pre>
+                <ul>
+                    <li>Timing events are running in separate thread → the only way for asynchronous execution in
+                        JavaScript:
+                    </li>
+                </ul>
+                <pre><code class="javascript" data-trim>
+                    setTimeout(() => { console.log('I\'m running in a new thread.') });
+                </code></pre>
+            </section>
+            <section>
+                <h3><code>window.console</code></h3>
+                <pre><code class="javascript" data-trim>
+                    console.error(...)     // any object
+                    console.warn(...)      // any object
+                    console.info(...)      // any object
+                    console.log(...)       // any object
+                    console.trace(...)     // any object
+
+                    console.dir(...)       // any object
+
+                    console.time(name)     // name is a string
+                    console.timeEnd(name)  // name is a string
+
+                    console.group(name)    // name is a string
+                    console.groupEnd(name) // name is a string
+                </code></pre>
+            </section>
+            <section>
+                <h3><code>JSON</code></h3>
+                (<b>J</b>ava<b>S</b>cript <b>O</b>bject <b>N</b>otation)
+                <br>
+                There is native support in both browsers and NodeJS
+                <pre><code class="javascript" data-trim>
+                    let myObject = JSON.parse('{ "a": 1, "b": "some string" }');
+                    let stringValue = JSON.stringify(myObject);
+                </code></pre>
+            </section>
+            <section>
+                <h3><code>window.localStorage, window.sessionStorage</code></h3>
+                <ul>
+                    <li><code>window.localStorage</code> - stores data with no expiration date</li>
+                    <li><code>window.sessionStorage</code> - stores data for one session (data is lost when the browser
+                        tab is closed)
+                    </li>
+                </ul>
+                <pre><code class="javascript" data-trim>
+                    localStorage.setItem('lastname', 'Smith');
+                    let myValue = localStorage.getItem('lastname');
+                    localStorage.removeItem('lastname');
+                </code></pre>
+                <pre><code class="javascript" data-trim>
+                    localStorage.setItem('complex', JSON.stingify({ a: 8, b: 'string' });
+                    let myValue = JSON.parse(localStorage.getItem('complex'));
+                </code></pre>
+            </section>
+            <section>
+                <h3>Other BOM objects</h3>
+                <ul>
+                    <li>document → DOM root</li>
+                    <li>location → Information about current URL</li>
+                    <li>navigator → Information about browser</li>
+                    <li>history → Browser's history API - since HTML5 <code>pushState/replaceState(...)</code></li>
+                    <li>screen → Information about screen device</li>
+                </ul>
+            </section>
+        </section>
+
+
+        <section>
+            <section>
+                <h1>10</h1>
                 <h2>DOM model</h2>
             </section>
             <section>
@@ -1244,7 +1348,7 @@
 
         <section>
             <section>
-                <h1>10</h1>
+                <h1>11</h1>
                 <h2>Events</h2>
             </section>
             <section>
@@ -1258,7 +1362,7 @@
 
         <section>
             <section>
-                <h1>11</h1>
+                <h1>12</h1>
                 <h2>ES6 Promise</h2>
             </section>
             <section>
@@ -1268,7 +1372,7 @@
 
         <section>
             <section>
-                <h1>12</h1>
+                <h1>13</h1>
                 <h2>Modules</h2>
             </section>
             <section>
@@ -1278,7 +1382,7 @@
 
         <section>
             <section>
-                <h1>13</h1>
+                <h1>14</h1>
                 <h2>XMLHTTPRequest</h2>
             </section>
             <section>
