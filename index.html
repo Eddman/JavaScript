@@ -40,16 +40,23 @@
                     <li>Scope and closures</li>
                     <li>Objects</li>
                     <li>Arrays</li>
+                    <li>Operators and conversions</li>
                 </ol>
             </section>
             <section>
                 <h3>Content</h3>
-                <ol start="7">
-                    <li>Operators</li>
+                <b>Browser API</b>
+                <br>
+                <ol start="8">
+                    <li>DOM model</li>
                     <li>Events</li>
                     <li>Promise</li>
+                </ol>
+                <hr>
+                <b>Advance topics</b>
+                <br>
+                <ol start="11">
                     <li>Modules</li>
-                    <li>DOM objects</li>
                     <li>XMLHTTPRequest</li>
                 </ol>
             </section>
@@ -291,8 +298,8 @@
                         return
                             a
                     }
-                    f1(2) -> 2
-                    f2(2) -> undefined
+                    f1(2) → 2
+                    f2(2) → undefined
                 </code></pre>
             </section>
         </section>
@@ -461,7 +468,7 @@
             <section>
                 <h3>Object literals</h3>
                 <pre><code class="javascript" data-trim>
-                    var person = {
+                    let person = {
                         firstName   : 'John',
                         lastName    : 'Doe',
                         age         : 50,
@@ -489,8 +496,8 @@
                         this.doSomething : () => { ... }
                         // return this;
                     }
-                    var myFather = new person('John', 'Doe', 50, 'blue');
-                    var myMother = new person('Sally', 'Rally', 48, 'green');
+                    let myFather = new person('John', 'Doe', 50, 'blue');
+                    let myMother = new person('Sally', 'Rally', 48, 'green');
 
                     myFather instanceof person === true
                 </code></pre>
@@ -521,7 +528,7 @@
                         return this.firstName + ' ' + this.lastName;
                     };
 
-                    var myFather = new Person('John', 'Doe', 50, 'blue');
+                    let myFather = new Person('John', 'Doe', 50, 'blue');
                     console.log(myFather.name());
                 </code></pre>
             </section>
@@ -599,7 +606,7 @@
                         get area   ()       { return this._width * this._height }
                     }
 
-                    var r = new Rectangle(50, 20)
+                    let r = new Rectangle(50, 20)
                     r.area === 1000
                 </code></pre>
             </section>
@@ -631,8 +638,8 @@
             <section>
                 <h3>Array literals vs. constructor</h3>
                 <pre><code class="javascript" data-trim data-noescape>
-                    var cars = ['Saab', 'Volvo', 'BMW'];
-                    var cars = new Array('Saab', 'Volvo', 'BMW');
+                    let cars = ['Saab', 'Volvo', 'BMW'];
+                    let cars = new Array('Saab', 'Volvo', 'BMW');
 
                     cars[0]; // "Saab"
                     cars[1] = 'Dacia';
@@ -642,7 +649,7 @@
                 <h3>Array vs. object</h3>
                 <ul>
                     <li>Keys are numbers</li>
-                    <li>Can have also non-numeric keys -> not part of the array</li>
+                    <li>Can have also non-numeric keys → not part of the array</li>
                 </ul>
                 <pre><code class="javascript" data-trim data-noescape>
                     let arr = [];
@@ -707,7 +714,7 @@
             <section>
                 <h3>Array.prototype.map</h3>
                 <pre><code class="javascript" data-trim data-noescape>
-                    var persons = [
+                    let persons = [
                         {firstname : "Malcom", lastname: "Reynolds"},
                         {firstname : "Kaylee", lastname: "Frye"},
                         {firstname : "Jayne", lastname: "Cobb"}
@@ -719,9 +726,9 @@
             <section>
                 <h3>Array.prototype.reduce</h3>
                 <pre><code class="javascript" data-trim data-noescape>
-                    var names = ['Alice', 'Bob', 'Tiff', 'Bruce', 'Alice'];
+                    let names = ['Alice', 'Bob', 'Tiff', 'Bruce', 'Alice'];
 
-                    var countedNames = names.reduce((allNames, name) => {
+                    let countedNames = names.reduce((allNames, name) => {
                       if (name in allNames) {
                         allNames[name]++;
                       } else {
@@ -739,7 +746,7 @@
         <section>
             <section>
                 <h1>7</h1>
-                <h2>Operators</h2>
+                <h2>Operators and conversions</h2>
             </section>
             <section>
                 <h3>Arithmetic Operators</h3>
@@ -870,6 +877,29 @@
                 </table>
             </section>
             <section>
+                <h3>Logical Operators</h3>
+                <table>
+                    <tbody>
+                    <tr>
+                        <th>Operator</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>&amp;&amp;</td>
+                        <td>logical and</td>
+                    </tr>
+                    <tr>
+                        <td>||</td>
+                        <td>logical or</td>
+                    </tr>
+                    <tr>
+                        <td>!</td>
+                        <td>logical not</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+            <section>
                 <h3>Type Operators</h3>
                 <table>
                     <tbody>
@@ -888,13 +918,125 @@
                     </tbody>
                 </table>
             </section>
+            <section>
+                <h3>Typeof</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    typeof 'John'                // Returns 'string'
+                    typeof 3.14                  // Returns 'number'
+                    typeof true                  // Returns 'boolean'
+
+                    typeof [1,2,3,4]             // Returns 'object' (not 'array')
+                    typeof {name:'John', age:34} // Returns 'object'
+                    typeof function myFunc(){}   // Returns 'function'
+                    typeof null                  // Returns 'object'
+                    typeof undefined             // Returns 'undefined'
+                </code></pre>
+                <ul style="float: left">
+                    <li>string</li>
+                    <li>number</li>
+                </ul>
+                <ul>
+                    <li>boolean</li>
+                    <li>function</li>
+                </ul>
+                <ul style="float: right">
+                    <li>object</li>
+                    <li>null</li>
+                </ul>
+            </section>
+            <section>
+                <h3>instanceof</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    function car () {}
+                    let a = new car
+                    a instanceof car                            // true
+                    a instanceof car.prototype.constructor      // true
+                    a.constructor === car.prototype.constructor // true
+
+                    car.prototype.constructor = function () {}
+                    a instanceof car.prototype.constructor      // false
+                    a instanceof car                            // true
+                    a instanceof a.constructor                  // false
+                    a.constructor = function() {}
+                    a instanceof car                            // true
+                </code></pre>
+            </section>
+            <section>
+                <h3>Expressions</h3>
+                <ul>
+                    <li>JavaScript evaluates expressions <b>from left to right</b>. Different sequences can produce
+                        different results.
+                    </li>
+                    <li>Values are <b>automatically</b> converted if needed (for all operators except <code>===</code>
+                        and <code>!==</code>)
+                    </li>
+                    <li><b>Avoid type conversions as much as possible → slow and unpredictable</b></li>
+                </ul>
+            </section>
+            <section>
+                <h3>Expressions</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    let x = 16 + 4 + 'Volvo';
+                    // x → 20Volvo
+                    x = 'Volvo' + 16 + 4;
+                    // x → Volvo164
+                    x = 'Volvo';
+                    let y = 8 - x;
+                    // y → NaN
+                    x = 4;
+                    y = 8 - x;
+                    // y → 4
+                    x = '5' + 4 // → 54
+                    x = '5' - 4 // → 1
+                </code></pre>
+            </section>
+            <section>
+                <h3>Booleans and conversion</h3>
+                <ul>
+                    <li>Everything With a "Real" Value is True</li>
+                </ul>
+                <pre><code class="javascript" data-trim data-noescape>
+                    if('a')         // → true
+                    if(1)           // → true
+                    if(-1)          // → true
+                    if(Infinity)    // → true
+                    if({})          // → true
+                    if([])          // → true
+
+                    if('')          // → false
+                    if(0)           // → false
+                    if(NaN)         // → false
+                    if(null)        // → false
+                    if(undefined)   // → false
+                </code></pre>
+            </section>
+            <section>
+                <h3>Booleans and conversion</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    var x = ...;
+
+                    if(<mark>!x</mark>) { // Evaluates to true if x is convertible to false
+                        x = ...;
+                    }
+
+                    // Logical or evaluates to the first operand that is convertible
+                    // to true
+                    x = <mark>x || {}</mark>; // Evaluates to {} if x is convertible to false
+
+                    // To check for null/undefined only
+                    //only undefined can be converted to null
+                    if(x <mark>!=</mark> null) {  // x <mark>==</mark> null
+                        ...
+                    }
+                </code></pre>
+            </section>
         </section>
 
 
         <section>
             <section>
                 <h1>8</h1>
-                <h2>Events</h2>
+                <h2>DOM model</h2>
             </section>
             <section>
             </section>
@@ -914,7 +1056,7 @@
         <section>
             <section>
                 <h1>10</h1>
-                <h2>Modules</h2>
+                <h2>Events</h2>
             </section>
             <section>
             </section>
@@ -924,7 +1066,7 @@
         <section>
             <section>
                 <h1>11</h1>
-                <h2>DOM objects</h2>
+                <h2>Modules</h2>
             </section>
             <section>
             </section>
