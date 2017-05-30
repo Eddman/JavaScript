@@ -11,6 +11,12 @@
 
     <!-- Theme used for syntax highlighting of code -->
     <link rel="stylesheet" href="lib/css/zenburn.css">
+    <style type="text/css">
+        mark {
+            background-color: #a23;
+            color: white;
+        }
+    </style>
 
     <!-- Printing and PDF exports -->
     <script>
@@ -1346,7 +1352,7 @@
                 <ul>
                     <li>All the elements of an HTML document are represented as DOM objects</li>
                     <li>Root object is <code>window.document</code></li>
-                    <li>All DOM objects have properties, methods and events</li>
+                    <li>All DOM objects have properties, methods (and events in case of elements)</li>
                 </ul>
             </section>
             <section>
@@ -1378,7 +1384,7 @@
             <section>
                 <h3>Elements and nodes</h3>
                 <ul>
-                    <li>All DOM objects are <code>Node</code>s.</li>
+                    <li>All DOM objects are <code>Node</code> instances.</li>
                     <li><code>Node.nodeType</code> represents the type of the node.</li>
                     <li>Elements have type <code>Node.ELEMENT_NODE</code></li>
                     <li>Attributes, comments, text nodes, etc. are also <code>Node</code> instances</li>
@@ -1408,8 +1414,328 @@
                 <h2>Events</h2>
             </section>
             <section>
+                <h3>HTML DOM events</h3>
+                <pre><code class="html" data-trim data-noescape>
+                    &lt;button type="button" <mark>onclick="myFunction(this, event)"</mark>&gt;
+                        Click me!
+                    &lt;/button&gt;
+                </code></pre>
+
+                <ul>
+                    <li>Accessible scope: global → <b>window</b></li>
+                    <li><b>this</b> - Reference to the target DOM element</li>
+                    <li><b>event</b> - Reference to the Event object</li>
+                </ul>
+            </section>
+            <section>
+                <h3>JavaScript DOM events</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    function displayDate(event) {
+                        this.innerHTML = new Date() + '&lt;br&gt;Event type:' + event.type;
+                    }
+
+                    let myBtn = document.getElementById('eventsTestButton');
+                    myBtn<mark>.onmousedown</mark> = displayDate;
+                    myBtn<mark>.onmouseup</mark> = displayDate;
+                </code></pre>
+                <ul>
+                    <li><b>this</b> - Reference to the target DOM element</li>
+                    <li><b>event</b> - Reference to the Event object</li>
+                </ul>
+                <br>
+                <button type="button" id="eventsTestButton">Click me!</button>
+                <script>
+                    function displayDate(event) {
+                        this.innerHTML = new Date() + '<br>Event type:' + event.type;
+                    }
+
+                    let myBtn = document.getElementById('eventsTestButton');
+                    myBtn.onmousedown = displayDate;
+                    myBtn.onmouseup = displayDate;
+                </script>
+            </section>
+            <section>
+                <h3>Event listeners</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    function displayDate(event) {
+                        this.innerHTML = new Date() + '&lt;br&gt;Event type:' + event.type;
+                    }
+
+                    let myBtn2 = document.getElementById('eventListenersTestButton');
+                    // Event bubbling
+                    myBtn2<mark>.addEventListener('mousedown', displayDate);</mark>
+                    // Event capturing
+                    myBtn2<mark>.addEventListener('mouseup', displayDate, true);</mark>
+                </code></pre>
+                <ul>
+                    <li><b>this</b> - Reference to the target DOM element</li>
+                    <li><b>event</b> - Reference to the Event object</li>
+                </ul>
+                <br>
+                <button type="button" id="eventListenersTestButton">Click me!</button>
+                <script>
+                    function displayDate(event) {
+                        this.innerHTML = new Date() + '<br>Event type:' + event.type;
+                    }
+
+                    let myBtn2 = document.getElementById('eventListenersTestButton');
+                    myBtn2.addEventListener('mousedown', displayDate);
+                    myBtn2.addEventListener('mouseup', displayDate);
+                </script>
+            </section>
+            <section>
+                <h3>Event bubbling</h3>
+                <pre><code class="html" data-trim data-noescape>
+                    &lt;html&gt;
+                    <div style="border: 3px solid #b58900">&lt;body&gt;
+                    <div style="border: 3px solid #cb4b16">&lt;div id="div1"&gt;
+                    <div style="border: 3px solid #7f9f7f">    &lt;div id="div2"&gt;
+                    <div style="border: 3px solid #1a53a1">        &lt;button type="button"
+                                        id="bubblingTestButton"
+                                        onclick="receiveEvent.bind(this)()"&gt;
+                                Click me!
+                            &lt;/button&gt;</div>    &lt;/div&gt;</div>&lt;/div&gt;</div>&lt;/body&gt;</div>&lt;/html&gt;
+                </code></pre>
+                <pre><code class="javascript" data-trim data-noescape>
+                    function receiveEvent() {
+                        window.alert('Hi, I\'m ' + this.tagName + '(' + this.id + ')');
+                    }
+                    document.body.addEventListener('click', receiveEvent); ...
+                </code></pre>
+                <div id="div1">
+                    <div id="div2">
+                        <button type="button"
+                                id="bubblingTestButton"
+                                onclick="receiveEvent.bind(this)(event)">
+                            Click me!
+                        </button>
+                    </div>
+                </div>
+                <script>
+                    function receiveEvent(event) {
+                        if (event.target === document.getElementById('bubblingTestButton'))
+                            window.alert('Hi, I\'m ' + this.tagName + '(' + this.id + ')');
+                    }
+                    document.body.addEventListener('click', receiveEvent);
+                    document.getElementById('div1').addEventListener('click', receiveEvent);
+                    document.getElementById('div2').addEventListener('click', receiveEvent);
+                </script>
+            </section>
+            <section>
+                <h3>Event bubbling - <code>stopPropagation()</code></h3>
+                <pre><code class="html" data-trim data-noescape>
+                            &lt;button type="button"
+                                        id="bubblingTestButton"
+                                        onclick="receiveEvent.bind(this)<mark>(event)</mark>"&gt;
+                                Click me!
+                            &lt;/button&gt;
+                </code></pre>
+                <pre><code class="javascript" data-trim data-noescape>
+                    function receiveEvent() {
+                        <mark>event.stopPropagation();</mark>
+                        window.alert('Hi, I\'m ' + this.tagName + '(' + this.id + ')');
+                    }
+                </code></pre>
+                <div id="div3">
+                    <div id="div4">
+                        <button type="button"
+                                id="bubblingTestButton2"
+                                onclick="receiveEvent2.bind(this)(event);">
+                            Click me!
+                        </button>
+                    </div>
+                </div>
+                <script>
+                    function receiveEvent2(event) {
+                        event.stopPropagation();
+                        if (event.target === document.getElementById('bubblingTestButton2'))
+                            window.alert('Hi, I\'m ' + this.tagName + '(' + this.id + ')');
+                    }
+                    document.body.addEventListener('click', receiveEvent2);
+                    document.getElementById('div3').addEventListener('click', receiveEvent2);
+                    document.getElementById('div4').addEventListener('click', receiveEvent2);
+                </script>
+            </section>
+            <section>
+                <h3>Event bubbling - <code>stopPropagation()</code></h3>
+                <pre><code class="html" data-trim data-noescape>
+                            &lt;button type="button"
+                                        id="bubblingTestButton"
+                                        onclick="receiveEvent.bind(this)()"&gt;
+                                Click me!
+                            &lt;/button&gt;
+                </code></pre>
+                <pre><code class="javascript" data-trim data-noescape>
+                    function receiveEvent() {
+                        window.alert('Hi, I\'m ' + this.tagName + '(' + this.id + ')');
+                    }
+                    document.getElementById('div2').addEventListener('click',
+                        (event) => event.<mark>stopPropagation()</mark>);
+                    document.getElementById('div2').addEventListener('click',
+                        receiveEvent);
+                </code></pre>
+                <div id="div5">
+                    <div id="div6">
+                        <button type="button"
+                                id="bubblingTestButton3"
+                                onclick="receiveEvent3.bind(this)();">
+                            Click me!
+                        </button>
+                    </div>
+                </div>
+                <script>
+                    function receiveEvent3() {
+                        if (event.target === document.getElementById('bubblingTestButton3'))
+                            window.alert('Hi, I\'m ' + this.tagName + '(' + this.id + ')');
+                    }
+                    document.body.addEventListener('click', receiveEvent3);
+                    document.getElementById('div5').addEventListener('click', receiveEvent3);
+                    document.getElementById('div6').addEventListener('click', (event) => event.stopPropagation());
+                    document.getElementById('div6').addEventListener('click', receiveEvent3);
+                </script>
+            </section>
+            <section>
+                <h3>Event bubbling - <code>stopImmediatePropagation()</code></h3>
+                <pre><code class="html" data-trim data-noescape>
+                            &lt;button type="button"
+                                        id="bubblingTestButton"
+                                        onclick="receiveEvent.bind(this)()"&gt;
+                                Click me!
+                            &lt;/button&gt;
+                </code></pre>
+                <pre><code class="javascript" data-trim data-noescape>
+                    function receiveEvent() {
+                        window.alert('Hi, I\'m ' + this.tagName + '(' + this.id + ')');
+                    }
+                    document.getElementById('div2').addEventListener('click',
+                        (event) => event.<mark>stopImmediatePropagation()</mark>);
+                    document.getElementById('div2').addEventListener('click',
+                        receiveEvent);
+                </code></pre>
+                <div id="div7">
+                    <div id="div8">
+                        <button type="button"
+                                id="bubblingTestButton4"
+                                onclick="receiveEvent4.bind(this)();">
+                            Click me!
+                        </button>
+                    </div>
+                </div>
+                <script>
+                    function receiveEvent4() {
+                        if (event.target === document.getElementById('bubblingTestButton4'))
+                            window.alert('Hi, I\'m ' + this.tagName + '(' + this.id + ')');
+                    }
+                    document.body.addEventListener('click', receiveEvent4);
+                    document.getElementById('div7').addEventListener('click', receiveEvent4);
+                    document.getElementById('div8').addEventListener('click', (event) => event.stopImmediatePropagation());
+                    document.getElementById('div8').addEventListener('click', receiveEvent4);
+                </script>
+            </section>
+            <section>
+                <h3>Event bubbling</h3>
+                <div id="outerDiv" style="background-color: #cb4b16; padding: 2%; width: 50%">
+                    #outerDiv
+                    <div id="innerDiv" style="background-color: #b58900; padding: 2%">
+                        #innerDiv
+                        <br>
+                        <button type="button"
+                                id="bubblingTestButton5"
+                                style="position: relative; left: 100%"
+                                onclick="receiveEvent5.bind(this)();">
+                            position: relative; left: 100%
+                        </button>
+                    </div>
+                </div>
+                <script>
+                    function receiveEvent5() {
+                        if (event.target === document.getElementById('bubblingTestButton5'))
+                            window.alert('Hi, I\'m ' + this.tagName + '(' + this.id + ')');
+                    }
+                    document.body.addEventListener('click', receiveEvent5);
+                    document.getElementById('outerDiv').addEventListener('click', receiveEvent5);
+                    document.getElementById('innerDiv').addEventListener('click', receiveEvent5);
+                </script>
+            </section>
+            <section>
+                <h3><code>Event</code> object</h3>
+                <ul>
+                    <li>Generated for each event automatically</li>
+                    <li>Carries information about event</li>
+                    <li>Handles bubbling</li>
+                </ul>
+                <table style="font-size: 45%">
+                    <tbody>
+                    <tr>
+                        <th style="width:20%">Property</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>bubbles</td>
+                        <td>Returns whether or not a specific event is a bubbling event</td>
+                    </tr>
+                    <tr>
+                        <td>cancelable</td>
+                        <td>Returns whether or not an event can have its default action prevented</td>
+                    </tr>
+                    <tr>
+                        <td>currentTarget</td>
+                        <td>Returns the element whose event listeners triggered the event</td>
+                    </tr>
+                    <tr>
+                        <td>defaultPrevented</td>
+                        <td>Returns whether or not the preventDefault() method was called for the event</td>
+                    </tr>
+                    <tr>
+                        <td>eventPhase</td>
+                        <td>Returns which phase of the event flow is currently being evaluated</td>
+                    </tr>
+                    <tr>
+                        <td>isTrusted</td>
+                        <td>Returns whether or not an event is trusted</td>
+                    </tr>
+                    <tr>
+                        <td>target</td>
+                        <td>Returns the element that triggered the event</td>
+                    </tr>
+                    <tr>
+                        <td>timeStamp</td>
+                        <td>Returns the time (in milliseconds relative to the epoch) at which the event was created</td>
+                    </tr>
+                    <tr>
+                        <td>type</td>
+                        <td>Returns the name of the event</td>
+                    </tr>
+                    <tr>
+                        <td>view</td>
+                        <td>Returns a reference to the Window object where the event occured</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+            <section>
+                <h3><code>Event</code> object</h3>
+                <table style="font-size: 50%;">
+                    <tbody><tr>
+                        <th style="width:28%">Method</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>preventDefault()</td>
+                        <td>Cancels the event if it is cancelable, meaning that the default  action that belongs to the event will not occur</td>
+                    </tr>
+                    <tr>
+                        <td>stopImmediatePropagation()</td>
+                        <td>Prevents other listeners of the same event from being called</td>
+                    </tr>
+                    <tr>
+                        <td>stopPropagation()</td>
+                        <td>Prevents further propagation of an event during event flow</td>
+                    </tr>
+                    </tbody></table>
             </section>
         </section>
+
 
         <section>
             <h1>Advance topics</h1>
