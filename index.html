@@ -1275,7 +1275,7 @@
                     clearInterval(handle);
                 </code></pre>
                 <ul>
-                    <li>Timing events are running in separate thread → the only way for asynchronous execution in
+                    <li>Timing events are running in "separate" thread → the only way for asynchronous execution in
                         JavaScript:
                     </li>
                 </ul>
@@ -1716,13 +1716,16 @@
             <section>
                 <h3><code>Event</code> object</h3>
                 <table style="font-size: 50%;">
-                    <tbody><tr>
+                    <tbody>
+                    <tr>
                         <th style="width:28%">Method</th>
                         <th>Description</th>
                     </tr>
                     <tr>
                         <td>preventDefault()</td>
-                        <td>Cancels the event if it is cancelable, meaning that the default  action that belongs to the event will not occur</td>
+                        <td>Cancels the event if it is cancelable, meaning that the default action that belongs to the
+                            event will not occur
+                        </td>
                     </tr>
                     <tr>
                         <td>stopImmediatePropagation()</td>
@@ -1732,7 +1735,8 @@
                         <td>stopPropagation()</td>
                         <td>Prevents further propagation of an event during event flow</td>
                     </tr>
-                    </tbody></table>
+                    </tbody>
+                </table>
             </section>
         </section>
 
@@ -1748,6 +1752,175 @@
                 <h2>ES6 Promise</h2>
             </section>
             <section>
+                From MDN:
+                <p style="font-size: 70%">A <code><strong>Promise</strong></code>&nbsp;is a proxy for a value not
+                    necessarily known when the promise is created. It allows you to associate handlers with an
+                    asynchronous action's eventual success value or failure reason. This lets asynchronous methods
+                    return values like synchronous methods: instead of immediately returning the final value, the
+                    asynchronous method returns a <em>promise</em> to supply the value at some point in the future.</p>
+                <img src="https://mdn.mozillademos.org/files/8633/promises.png" alt="">
+            </section>
+            <section>
+                <h3>Timing Events - ES5</h3>
+                <pre><code class="javascript" data-trim>
+                    let handle = setTimeout(() => { ... }, 1000); // milliseconds
+                    clearTimeout(handle);
+                </code></pre>
+                <pre><code class="javascript" data-trim>
+                    let handle = setInterval(() => { ... }, 1000); // milliseconds
+                    clearInterval(handle);
+                </code></pre>
+                <ul>
+                    <li>Timing events are running in "separate" thread → the only way for asynchronous execution in
+                        JavaScript:
+                    </li>
+                </ul>
+                <pre><code class="javascript" data-trim>
+                    setTimeout(() => { console.log('I\'m running in a new thread.') });
+                </code></pre>
+            </section>
+            <section>
+                <h3>ES5 callbacks</h3>
+                <pre><code class="javascript" data-trim>
+                    doSomething(function(result) {
+                        doSomethingElse(result, function(newResult) {
+                            doThirdThing(newResult, function(finalResult) {
+                                console.log('Got the final result: ' + finalResult);
+                            }, failureCallback);
+                        }, failureCallback);
+                    }, failureCallback);
+                </code></pre>
+            </section>
+            <section>
+                <h3>Promise constructor</h3>
+                <pre><code class="javascript" data-trim>
+                    let myFirstPromise = new Promise((resolve, reject) => {
+                       ... resolve(anyData); ...
+                       ... reject(someErrorData); ...
+                    });
+                </code></pre>
+
+                <pre><code class="javascript" data-trim>
+                    let myFirstPromise = new Promise((resolve, reject) => {
+                        setTimeout(() => {
+                            ... resolve(anyData); ...
+                            ... reject(someErrorData); ...
+                        }, 100);
+                    });
+                </code></pre>
+            </section>
+            <section>
+                <h3><code>Promise.resolve</code> and <code>Promise.reject</code></h3>
+                <pre><code class="javascript" data-trim>
+                    // new Promise((resolve) => resolve(52));
+                    let myPromise1 = Promise.resolve(52);
+
+                    // new Promise((resolve, reject) => reject('Error!'));
+                    let myPromise2 = Promise.reject('Error!');
+                </code></pre>
+            </section>
+            <section>
+                <h3>Promise <code>then</code> and <code>catch</code></h3>
+                <pre><code class="javascript" data-trim>
+                    // onFulfilled handler
+                    myFirstPromise
+                        .then((resolvedData) => { ... });
+
+                    // onFulfilled and onRejected handler
+                    myFirstPromise
+                        .then((resolvedData) => { ... }, (errorData) => { ... });
+
+                    // onRejected handler
+                    myFirstPromise
+                        .cache((errorData) => { ... });
+                </code></pre>
+            </section>
+            <section>
+                <h3><code>Promise</code>, <code>onFulfilled</code> and <code>onRejected</code> return values</h3>
+                <pre><code class="javascript" data-trim>
+                    let newPromise = myFirstPromise
+                        .then((resolvedData) => {
+                            return new Promise(...);
+                        },
+                        (errorData) => {
+                            return {
+                                some: 'object',
+                                or: 'any other primitive type'
+                            }
+                        })
+                        .catch((errorData) => {});
+                </code></pre>
+            </section>
+            <section>
+                <h3>Promise chaining</h3>
+                <pre><code class="javascript" data-trim>
+                    let loadDeparture = (user) => new Promise((resolve) => {
+                        ... resolve(flightID);
+                    });
+                    let loadFlight = (flightID) => {
+                        ... return flight;
+                    });
+                    let loadForecast = (flight) => {
+                        return new Promise((resolve) => {
+                            ... resolve(destinationWeather);
+                        });
+                    });
+
+                    loadDeparture(user).then(loadFlight).then(loadForecast)
+                        .then((destinationWeather) => ... present result ...);
+                </code></pre>
+            </section>
+            <section>
+                <h3><code>Promise.all</code></h3>
+                <pre><code class="javascript" data-trim>
+                    let p1 = Promise.resolve(3);
+                    let p2 = 1337;
+                    let p3 = new Promise((resolve, reject) => {
+                      setTimeout(resolve, 100, 'foo');
+                    });
+
+                    Promise.all([p1, p2, p3]).then(values => {
+                      console.log(values); // [3, 1337, "foo"]
+                    });
+                </code></pre>
+            </section>
+            <section>
+                <h3><code>Promise.race</code></h3>
+                <pre><code class="javascript" data-trim>
+                    let p1 = new Promise(function(resolve, reject) {
+                        setTimeout(resolve, 500, 'one');
+                    });
+                    let p2 = new Promise(function(resolve, reject) {
+                        setTimeout(resolve, 100, 'two');
+                    });
+
+                    Promise.race([p1, p2]).then(function(value) {
+                      console.log(value); // "two"
+                      // Both resolve, but p2 is faster
+                    });
+                </code></pre>
+            </section>
+            <section>
+                <h3>Timing</h3>
+                <iframe webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""
+                        sandbox="allow-forms allow-scripts allow-popups allow-same-origin allow-pointer-lock"
+                        data-src="tasks.html" data-x-frame-status="blocked"
+                        style="height: 400px;width: 500px; margin: 0 auto;"
+                        src="tasks.html"></iframe>
+                <br>
+                <a href="https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/">Tasks, microtasks,
+                    queues and schedules</a>
+            </section>
+            <section>
+                <h3>Conclusion</h3>
+                <ul>
+                    <li>Promises are great to simplify async code, callbacks</li>
+                    <li>Executed on microtask queue</li>
+                    <li>If the execution take long use setTimeout → does not block the browser</li>
+                    <li>RECOMMENDATION: using <code>Promise</code> for all tasks leverages time spent on main task queue
+                        → page renders and responds faster
+                    </li>
+                </ul>
             </section>
         </section>
 
