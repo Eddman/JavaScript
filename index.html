@@ -1931,6 +1931,228 @@
                 <h2>Modules</h2>
             </section>
             <section>
+                <h3>Why modules?</h3>
+                <ul>
+                    <li>
+                        Traditional objects
+                        <ul>
+                            <li>Small units</li>
+                            <li>Limited responsibility</li>
+                            <li>Defined in global scope → name clashes</li>
+                        </ul>
+                    </li>
+                    <li>
+                        Modules
+                        <ul>
+                            <li>Composition of multiple objects, constants, etc. under single unit</li>
+                            <li>Namespaces to bundle multiple objects → no name clashes</li>
+                            <li>Transparent scopes</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+            <section>
+                <h3>Modules - Naive approach</h3>
+                <pre><code class="javascript" data-trim>
+                    function Car() { ... }
+
+                    let carModule = {
+                        Car : Car,
+                        someProperty: 2,
+                        ...
+                    }
+                </code></pre>
+
+                <pre><code class="javascript" data-trim>
+                    let myCar = new carModule.Car();
+                    let prop = carModule.somePropery;
+                </code></pre>
+                <ul>
+                    <li style="list-style-type:none">&#65291; Namespace to bundle multiple objects</li>
+                    <li style="list-style-type:none">&#65293; Defined in global scope → name clashes</li>
+                </ul>
+            </section>
+            <section>
+                <h3>Modules - IIFE</h3>
+                <b>I</b>mmediately-<b>I</b>nvoked <b>F</b>unction <b>E</b>xpression
+                <pre><code class="javascript" data-trim data-noescape>
+                    <mark>;</mark>(function(global) {
+                        function Car() { ... }
+
+                        global.carModule = {
+                            Car : Car,
+                            someProperty: 2,
+                            ...
+                        }
+                    })(window); // Or "global" in NodeJS or any other object
+                </code></pre>
+
+                <pre><code class="javascript" data-trim>
+                    let myCar = new carModule.Car();
+                    let prop = carModule.somePropery;
+                </code></pre>
+                <ul>
+                    <li style="list-style-type:none">&#65291; Defined in function's scope → no name clashes</li>
+                    <li style="list-style-type:none">&#65291; Only some members are "exported"</li>
+                    <li style="list-style-type:none">&#65293; Scripts are loaded and executed on DOM load</li>
+                </ul>
+            </section>
+            <section>
+                <h3>Advance module systems</h3>
+                <ul>
+                    <li>Synchronous and asynchronous file loading</li>
+                    <li>Introduce dependencies management and injection</li>
+                    <li>Allow further optimizations → Tree-shaking</li>
+                </ul>
+
+                <table>
+                    <tr>
+                        <th></th>
+                        <th>CJS</th>
+                        <th>AMD</th>
+                        <th>UMD</th>
+                        <th>System</th>
+                        <th>ES2015</th>
+                    </tr>
+                    <tr>
+                        <th>Cycles.</th>
+                        <td>&#10003;</td>
+                        <td>&#10007;</td>
+                        <td>&#10003;</td>
+                        <td>&#10003;</td>
+                        <td>&#10003;</td>
+                    </tr>
+                    <tr>
+                        <th>Async.</th>
+                        <td>&#10007;</td>
+                        <td>&#10003;</td>
+                        <td>&#10067;</td>
+                        <td>&#10003;</td>
+                        <td>&#10003;</td>
+                    </tr>
+                    <tr>
+                        <th>TS.</th>
+                        <td>&#10007;</td>
+                        <td>&#10007;</td>
+                        <td>&#10007;</td>
+                        <td>&#10007;</td>
+                        <td>&#10003;</td>
+                    </tr>
+                </table>
+            </section>
+            <section>
+                <h3>CommonJS (CJS)</h3>
+                <ul style="font-size: 70%">
+                    <li>Developed for server-side environments</li>
+                    <li>Synchronous dependencies management</li>
+                    <li>Allows cyclic dep. → unfinished copy of the "exports" object</li>
+                </ul>
+                <pre><code class="javascript" data-trim data-noescape>
+                    // module A (a.js)
+                    // let moduleA = { exports: {}, id: 'file path', ... },
+                    // (function(module) {
+                    // let exports = module.exports;
+                    exports.Car = function Car() { ... }
+                    module.exports.someProperty = 2;
+                    // })(moduleA);
+                </code></pre>
+                <pre><code class="javascript" data-trim data-noescape>
+                     // module B (b.js)
+                     let moduleA = require('./a.js'); // Global function
+                     let myCar = new moduleA.Car();
+                     // exports = ... overrides local variable "exports"
+                     <mark>module.</mark>exports = {
+                        carInstance: myCar
+                     };
+                </code></pre>
+            </section>
+            <section>
+                <h3>CommonJS (CJS)</h3>
+                <ul>
+                    <li>Native support in NodeJS or MongoDB :)</li>
+                    <li>Browser support: Browserify, SystemJS</li>
+                </ul>
+            </section>
+            <section>
+                <h3>AMD</h3>
+                <ul style="font-size: 70%">
+                    <li><b>A</b>synchronous <b>M</b>odule <b>D</b>efinition</li>
+                    <li>Developed for browsers</li>
+                    <li>Does not allow cyclic dependencies</li>
+                </ul>
+                <pre><code class="javascript" data-trim data-noescape>
+                    // module A (a.js)
+                    define(function() {
+                        function Car() { ... }
+                        return {
+                            someProperty: 2,
+                            Car: Car;
+                        }
+                    });
+                </code></pre>
+                <pre><code class="javascript" data-trim data-noescape>
+                    // module B (b.js)
+                    define(['./a.js', 'exports', 'module'],
+                        function(moduleA, exports, module) {
+                            let myCar = new moduleA.Car();
+                            exports.carInstance = myCar;
+                            exports.moduleId = module.id;
+                        });
+                </code></pre>
+            </section>
+            <section>
+                <h3>AMD</h3>
+                <ul style="font-size: 70%">
+                    <li>Compatible with CommonJS</li>
+                </ul>
+                <pre><code class="javascript" data-trim data-noescape>
+                    // module B (b.js)
+                    define(['./a.js', 'exports'],
+                        function(moduleA, exports) {
+                            let commonJSModule = require('./commonJSModule.js');
+                            // Dynamically (and async.) loaded module
+                            require(['./someOtherModule.js'], function (otherModule) {
+                                exports.asyncModule = otherModule;
+                            });
+                        });
+                </code></pre>
+                <pre><code class="javascript" data-trim data-noescape>
+                    // c.js
+                    require(['./someModule.js'], function (someModule) {
+                        someModule.doSomething();
+                    });
+                </code></pre>
+            </section>
+            <section>
+                <h3>AMD</h3>
+                <ul style="font-size: 70%">
+                    <li>Not supported on server side</li>
+                    <li>Browser support: RequireJS, SystemJS</li>
+                </ul>
+            </section>
+            <section>
+                <h3>UMD</h3>
+                <ul style="font-size: 70%">
+                    <li><b>U</b>niversal <b>M</b>odule <b>D</b>efinition</li>
+                    <li>Supported in all environments</li>
+                </ul>
+                <pre><code class="javascript" data-trim data-noescape>
+                    (function (root, factory) {
+                        if (typeof define === 'function' && define.amd) {
+                            // AMD. Register as an anonymous module.
+                            define(['exports', 'module', 'someModule'], factory);
+                        } else if (typeof exports === 'object'
+                                && typeof exports.nodeName !== 'string') {
+                            factory(exports, module, require('someModule')); // CommonJS
+                        } else {
+                            factory((root.moduleID = {}), // Browser globals
+                                { exports: root.moduleID, id: ''}, root.someModule);
+                        }
+                    }(this, function (exports, module, someModule) {
+                        ...
+                        exports.action = function () {};
+                    }));
+                </code></pre>
             </section>
         </section>
 
