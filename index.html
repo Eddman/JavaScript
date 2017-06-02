@@ -20,7 +20,7 @@
 
     <!-- Printing and PDF exports -->
     <script>
-        var link = document.createElement('link');
+        let link = document.createElement('link');
         link.rel = 'stylesheet';
         link.type = 'text/css';
         link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
@@ -31,8 +31,8 @@
 <div class="reveal">
     <div class="slides">
         <section>
-            <h2>JavaScript - Basics</h2>
-            <h3>(ECMA script 2015 – ES6)</h3>
+            <h2>JavaScript</h2>
+            <h3>(ECMAScript 2015 – ES6)</h3>
         </section>
 
 
@@ -63,7 +63,7 @@
                 <b>Advance topics</b>
                 <br>
                 <ol start="12">
-                    <li>ES6 Promise</li>
+                    <li>ES2015/ES6 Promise</li>
                     <li>Modules</li>
                     <li>XMLHTTPRequest</li>
                 </ol>
@@ -443,7 +443,7 @@
                             <mark>self</mark>.fives.push(v);
                     });
 
-                    //  variant 2 (since ECMAScript 5.1 only)
+                    //  variant 2 (since ECMAScript 5.1)
                     this.nums.forEach(function (v) {
                         if (v % 5 === 0)
                             this.fives.push(v);
@@ -453,14 +453,14 @@
             <section>
                 <h3>ES2015/ES6 - Extended parameter handling</h3>
                 <pre><code class="javascript" data-trim data-noescape>
-                    function f (x, y = 7, z = 42) { // ES6 default values
+                    function f (x, y = 7, z = 42) { // ES2015/ES6 default values
                         // ES5: y = y || 7; ...
                         return x + y + z
                     }
                     f(1) === 50
                 </code></pre>
                 <pre><code class="javascript" data-trim data-noescape>
-                    function f (x, y, ...a) { // ES6 rest parameter
+                    function f (x, y, ...a) { // ES2015/ES6 rest parameter
                         // ES5 a = Array.prototype.slice.call(arguments, 2);
                         return (x + y) * a.length
                     }
@@ -581,7 +581,7 @@
                     let f = () => {
                         a                            : 'b',
                         c                            : 'd'
-                        [ 'string' + Math.random() ] : 'e' // ES 6
+                        [ 'string' + Math.random() ] : 'e' // ES2015/ES6
                         myMethod (a, b) { ... }
                     };
 
@@ -684,7 +684,7 @@
             <section>
                 <h3>Static methods</h3>
                 <pre><code class="javascript" data-trim data-noescape>
-                    // ES6
+                    // ES2015/ES6
                     class Teacher extends Person {
                         static myStaticMethod() { ... }
                     }
@@ -1154,7 +1154,7 @@
                 <h2>ES2015/ES6</h2>
             </section>
             <section>
-                <h3>ES6 Support</h3>
+                <h3>ES2015/ES6 Support</h3>
                 <table style="font-size: 50%">
                     <tr>
                         <!-- TABLE HEADERS -->
@@ -1248,7 +1248,7 @@
                 <h3><code>window</code></h3>
                 <ul>
                     <li>Represents browser's window.</li>
-                    <li>Equivalent to NodeJS's <code>global.</code></li>
+                    <li>Equivalent to Node.js's <code>global.</code></li>
                     <li>All global JavaScript objects, functions, and variables automatically become properties and
                         methods of the <code>window</code> object.
                     </li>
@@ -1305,7 +1305,7 @@
                 <h3><code>JSON</code></h3>
                 (<b>J</b>ava<b>S</b>cript <b>O</b>bject <b>N</b>otation)
                 <br>
-                There is native support in both browsers and NodeJS
+                There is native support in both browsers and Node.js
                 <pre><code class="javascript" data-trim>
                     let myObject = JSON.parse('{ "a": 1, "b": "some string" }');
                     let stringValue = JSON.stringify(myObject);
@@ -1749,7 +1749,7 @@
         <section>
             <section>
                 <h1>12</h1>
-                <h2>ES6 Promise</h2>
+                <h2>ES2015/ES6 Promise</h2>
             </section>
             <section>
                 From MDN:
@@ -1984,7 +1984,7 @@
                             someProperty: 2,
                             ...
                         }
-                    })(window); // Or "global" in NodeJS or any other object
+                    })(window); // Or "global" in Node.js or any other object
                 </code></pre>
 
                 <pre><code class="javascript" data-trim>
@@ -2011,15 +2011,13 @@
                         <th>CJS</th>
                         <th>AMD</th>
                         <th>UMD</th>
-                        <th>System</th>
-                        <th>ES2015</th>
+                        <th>ES2015/ES6</th>
                     </tr>
                     <tr>
                         <th>Cycles.</th>
                         <td>&#10003;</td>
                         <td>&#10007;</td>
-                        <td>&#10003;</td>
-                        <td>&#10003;</td>
+                        <td>&#10067;</td>
                         <td>&#10003;</td>
                     </tr>
                     <tr>
@@ -2028,11 +2026,9 @@
                         <td>&#10003;</td>
                         <td>&#10067;</td>
                         <td>&#10003;</td>
-                        <td>&#10003;</td>
                     </tr>
                     <tr>
                         <th>TS.</th>
-                        <td>&#10007;</td>
                         <td>&#10007;</td>
                         <td>&#10007;</td>
                         <td>&#10007;</td>
@@ -2067,9 +2063,40 @@
                 </code></pre>
             </section>
             <section>
+                <h3>CommonJS - Cycles</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    // a.js
+                    let b = require('./b.js');
+                    exports.foo = function () { ... };
+                </code></pre>
+                <pre><code class="javascript" data-trim data-noescape>
+                    // b.js
+                    let a = require('./a.js'); // (1)
+                    // Can’t use a.foo in module body,
+                    // but it will be filled in later
+                    exports.bar = function () {
+                        a.foo(); // OK (2)
+                    };
+                </code></pre>
+                <pre><code class="javascript" data-trim data-noescape>
+                    // main.js
+                    let a = require('./a.js');
+                </code></pre>
+            </section>
+            <section>
                 <h3>CommonJS (CJS)</h3>
                 <ul>
-                    <li>Native support in NodeJS or MongoDB :)</li>
+                    <li>
+                        Dependencies not known prior to execution/loaded on demand:
+                        <ul>
+                            <li>
+                                Dependencies can't be loaded asynchronously (are not known) prior to module body
+                                execution
+                            </li>
+                            <li><code>require</code> is blocking the task queue</li>
+                        </ul>
+                    </li>
+                    <li>Native support in Node.js or MongoDB :)</li>
                     <li>Browser support: Browserify, SystemJS</li>
                 </ul>
             </section>
@@ -2125,7 +2152,17 @@
             </section>
             <section>
                 <h3>AMD</h3>
-                <ul style="font-size: 70%">
+                <ul>
+                    <li>
+                        Dependencies are known based on the arrays in <code>define</code> and <code>require</code>:
+                        <ul>
+                            <li>
+                                Such dependencies are loaded asynchronously prior to module body execution<br>
+                                <b>(modules have to be non-cyclic)</b>
+                            </li>
+                            <li>CommonJS style <code>require</code> is still blocking the task queue</li>
+                        </ul>
+                    </li>
                     <li>Not supported on server side</li>
                     <li>Browser support: RequireJS, SystemJS</li>
                 </ul>
@@ -2153,6 +2190,143 @@
                         exports.action = function () {};
                     }));
                 </code></pre>
+            </section>
+            <section>
+                <h3>ES2015/ES6</h3>
+                <ul style="font-size: 70%">
+                    <li>Allow cyclic dependencies</li>
+                    <li>Can be statically analyzed</li>
+                </ul>
+                <pre><code class="javascript" data-trim data-noescape>
+                    // module A (a.js)
+                    export class Car { ... }
+                    export let someProperty = 2;
+                    export { MY_CONST, myFunc };
+                    export { MY_CONST as THE_CONST, myFunc as theFunc };
+                    export * from 'src/other_module';
+                    export default class Foo {}
+                </code></pre>
+                <pre><code class="javascript" data-trim data-noescape>
+                    // module B (b.js)
+                    import theDefault, { Car, someProperty } from './a';
+                    import theDefault from './a';
+                    import { Car, someProperty } from './a';
+                    import { Car as Automobile, someProperty } from './a';
+                    import * as moduleA from './a';
+                    import './a';
+                    let car = new Automobile(); someProperty === '2'; etc.
+                </code></pre>
+            </section>
+            <section>
+                <h3>ES2015/ES6 - Cycles</h3>
+                ECMAScript 6 modules export bindings, not values
+                <pre><code class="javascript" data-trim data-noescape>
+                    //------ a.js ------
+                    import { someMethod, foo } from 'b.js';
+                    export function foo() { ... };
+                </code></pre>
+                <pre><code class="javascript" data-trim data-noescape>
+                    //------ b.js ------
+                    // Can be translated to a = require('a.js');
+                    import { foo } from 'a.js';
+                    // Can’t use a.foo in module body,
+                    // but it will be filled in later
+                    export function bar() {
+                        foo(); // a.foo → OK (2)
+                    };
+                </code></pre>
+            </section>
+            <section>
+                <h3>ES2015/ES6</h3>
+                <ul>
+                    <li>
+                        Dependencies are known based on static analysis:
+                        <ul>
+                            <li>Dependencies <b>can be</b> loaded asynchronously prior to module body execution</li>
+                            <li>Modules export bindings, not values - Cycles allowed</li>
+                        </ul>
+                    </li>
+                    <li>ES2015/ES6 contains <b>module definition</b> only; Specs for module loading is still a draft
+                    </li>
+                    <li>
+                        Natively supported in ES2015/ES6 enabled environments, but currently with limitations: Chrome
+                        60+,
+                        FF 54+, Safari 10.1+, Edge 14+
+                    </li>
+                </ul>
+            </section>
+            <section>
+                <h3>ES2015/ES6 - <code>System.import</code> draft</h3>
+                <ul>
+                    <li><code>System.import</code> allows on-demand module loading</li>
+                    <li>Implemented in SystemJS</li>
+                </ul>
+                <pre><code class="javascript" data-trim data-noescape>
+                    System.import('some_module') // Returns promise
+                        .then(some_module => {
+                            // Use some_module
+                        })
+                        .catch(error => {
+                            ...
+                        });
+                </code></pre>
+            </section>
+            <section>
+                <h3>What to use?</h3>
+                <ul>
+                    <li>In development use <b style="color: red">ES2015!</b>
+                        <ul>
+                            <li>Clear and simple syntax</li>
+                        </ul>
+                    </li>
+                    <li class="fragment">In production use <b style="color: red">IIFE!</b></li>
+                </ul>
+                <br>
+                <h4 class="fragment">WAIT, WHAT?!?</h4>
+            </section>
+            <section>
+                <h3>Transpiling for development</h3>
+                <ul>
+                    <li>Babel can produce all module formats from ES2015 (CommonJS or AMD suite best;)</li>
+                    <li>
+                        Modules are loaded via SystemJS, RequireJS or any other tool:
+                        <ul>
+                            <li>Flexible development</li>
+                            <li>Code split into multiple files</li>
+                            <li>Faster traspilation</li>
+                            <li>Dependency injection</li>
+                            <li>etc.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+            <section>
+                <h3>Production</h3>
+                <ul>
+                    <li>Don't use modules in production → slower download times
+                        <ul>
+                            <li>Too many HTTP requests</li>
+                            <li>Small files</li>
+                        </ul>
+                    </li>
+                    <li>One big bundle is much more faster to load and process</li>
+                    <li>Use <b>Webpack 2 or Rollup</b> to create the IIFE result</li>
+                </ul>
+            </section>
+            <section>
+                <h3>Tree-shaking</h3>
+                Why ES2015 modules in development?
+                <ul>
+                    <li class="fragment"><b>Webpack 2 or Rollup</b> operate over ES2015, AMD or CommonJS modules</li>
+                    <li class="fragment">
+                        Based on analysis of ES2015 modules they are able to "tree-shake" the final code → smaller
+                        bundles → faster load times
+                    </li>
+                    <li class="fragment">Tree-shaking removes not used parts of code</li>
+                    <li class="fragment">
+                        With ES2015 we import only parts of modules, AMD and CJS imports everything
+                    </li>
+                </ul>
             </section>
         </section>
 
