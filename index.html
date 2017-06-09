@@ -7,7 +7,6 @@
     <title>JavaScript - Basics</title>
 
     <link rel="stylesheet" href="css/reveal.css">
-    <link rel="stylesheet" href="css/theme/blood.css">
 
     <!-- Theme used for syntax highlighting of code -->
     <link rel="stylesheet" href="lib/css/zenburn.css">
@@ -20,11 +19,18 @@
 
     <!-- Printing and PDF exports -->
     <script>
-        let link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.type = 'text/css';
-        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
-        document.getElementsByTagName('head')[0].appendChild(link);
+        let isPDFPrint = window.location.search.match(/print-pdf/gi);
+        let theme = document.createElement('link');
+        theme.rel = 'stylesheet';
+        theme.type = 'text/css';
+        theme.href = isPDFPrint ? 'css/theme/white.css' : 'css/theme/blood.css';
+        document.getElementsByTagName('head')[0].appendChild(theme);
+
+        let print = document.createElement('link');
+        print.rel = 'stylesheet';
+        print.type = 'text/css';
+        print.href = isPDFPrint ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(print);
     </script>
 </head>
 <body>
@@ -2440,7 +2446,7 @@
         slideNumber: true,
 
         // Push each slide change to the browser history
-        history: true,
+        history: !isPDFPrint,
 
         // Flags if we should show a help overlay when the questionmark
         // key is pressed
