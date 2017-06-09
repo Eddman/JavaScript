@@ -65,7 +65,7 @@
                 <ol start="12">
                     <li>ES2015/ES6 Promise</li>
                     <li>Modules</li>
-                    <li>XMLHTTPRequest</li>
+                    <li>XMLHttpRequest</li>
                 </ol>
             </section>
         </section>
@@ -1325,7 +1325,7 @@
                     localStorage.removeItem('lastname');
                 </code></pre>
                 <pre><code class="javascript" data-trim>
-                    localStorage.setItem('complex', JSON.stingify({ a: 8, b: 'string' });
+                    localStorage.setItem('complex', JSON.stringify({ a: 8, b: 'string' });
                     let myValue = JSON.parse(localStorage.getItem('complex'));
                 </code></pre>
             </section>
@@ -1708,7 +1708,7 @@
                     </tr>
                     <tr>
                         <td>view</td>
-                        <td>Returns a reference to the Window object where the event occured</td>
+                        <td>Returns a reference to the Window object where the event occurred</td>
                     </tr>
                     </tbody>
                 </table>
@@ -1965,7 +1965,7 @@
 
                 <pre><code class="javascript" data-trim>
                     let myCar = new carModule.Car();
-                    let prop = carModule.somePropery;
+                    let prop = carModule.someProperty;
                 </code></pre>
                 <ul>
                     <li style="list-style-type:none">&#65291; Namespace to bundle multiple objects</li>
@@ -2334,9 +2334,91 @@
         <section>
             <section>
                 <h1>14</h1>
-                <h2>XMLHTTPRequest</h2>
+                <h2>XMLHttpRequest</h2>
             </section>
             <section>
+                <h3>HTTP</h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Request</th>
+                        <th>Response</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Method <br>(GET, POST, PUT, DELETE)</td>
+                        <td>Status code</td>
+                    </tr>
+                    <tr>
+                        <td>Request path</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Headers</td>
+                        <td>Headers</td>
+                    </tr>
+                    <tr>
+                        <td>Form data /<br>Query parameters</td>
+                        <td>Response body</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+            <section>
+                <h3>Full vs. partial HTTP requests</h3>
+                <ul>
+                    <li>Full HTTP request
+                        <ul>
+                            <li>Results in full page reload/navigation</li>
+                            <li>Link click, form submit, <code>location.href = </code>, ...</li>
+                        </ul>
+                    </li>
+                    <li>Partial HTTP request
+                        <ul>
+                            <li>Results in partial page change</li>
+                            <li>Ajax, JSONP, ...</li>
+                            <li><code>XMLHttpRequest</code></li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+            <section>
+                <h3><code>XMLHttpRequest</code></h3>
+                XMLHttpRequest → HTTP client for JavaScript.
+                <pre><code class="javascript" data-trim data-noescape>
+                    let async = true;
+                    let httpRequest = new XMLHttpRequest();
+                    httpRequest.onreadystatechange = () => {
+                        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                            if (httpRequest.<mark>status</mark> === 200) {
+                                alert(httpRequest.<mark>responseText</mark>);
+                                let xmldoc = httpRequest.<mark>responseXML;</mark>
+                                let objectLiteral = <mark>JSON.parse</mark>(httpRequest.<mark>responseText</mark>);
+                            } else {
+                                alert('There was a problem with the request.');
+                            }
+                        }
+                    };
+                    httpRequest.open('GET', 'test.html', async);
+                    httpRequest.send();
+                </code></pre>
+            </section>
+            <section>
+                <h3><code>HTTP headers and body</code></h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    let async = true;
+                    let httpRequest = new XMLHttpRequest();
+                    httpRequest.<mark>setRequestHeader('Content-Type',
+                        'application/x-www-form-urlencoded')</mark>;
+                    httpRequest.onreadystatechange = () => {
+                        ...
+                        <mark>httpRequest.getResponseHeader('Content-Type');</mark>
+                        ...
+                    };
+                    httpRequest.open(<mark>'POST'</mark>, 'test.html', async);
+                    httpRequest.send(<mark>'userName=' + encodeURIComponent(userName)</mark>);
+                </code></pre>
             </section>
         </section>
     </div>
