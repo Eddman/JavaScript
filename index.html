@@ -53,7 +53,7 @@
                     <li>Objects</li>
                     <li>Arrays</li>
                     <li>Operators and conversions</li>
-                    <li>ES2015/ES6</li>
+                    <li>ES2015/ES6 browser support</li>
                 </ol>
             </section>
             <section>
@@ -69,7 +69,7 @@
                 <b>Advance topics</b>
                 <br>
                 <ol start="12">
-                    <li>ES2015/ES6 Promise</li>
+                    <li>Execution timing and<br>ES2015/ES6 Promise</li>
                     <li>Modules</li>
                     <li>XMLHttpRequest</li>
                 </ol>
@@ -92,7 +92,7 @@
                 Inline JavaScript:
                 <pre><code class="html" data-trim data-noescape>
                     &lt;script <mark>type="text/javascript"</mark>&gt;
-                        document.getElementById('demo').innerHTML = 'My First JavaScript';
+                        document.getElementById('demo').innerHTML = 'My First JavaScript';
                     &lt;/script&gt;
                 </code></pre>
 
@@ -141,10 +141,10 @@
 
                 ES2015/ES6:
                 <pre><code class="javascript" data-trim>
-                    let x;
+                    let x;
                     x = 6;
 
-                    const z = 8;
+                    const z = 8; // In Java → final
 
                     y = 8; // ReferenceError: y is not defined
                     let y;
@@ -174,6 +174,7 @@
                         var c = 10;
                     }
                 </code></pre>
+                If we replace <b>let a = 0</b> with <b>var a = 0</b> it will be visible in the whole function
             </section>
             <section>
                 <h3>Primitive types</h3>
@@ -217,7 +218,7 @@
             </section>
             <section>
                 <h3>Date</h3>
-                <pre><code class="javascript" data-trim data-noescape>
+                <pre><code class="javascript" data-trim>
                     let date = new Date();
                     date.toUTCString();
                 </code></pre>
@@ -238,18 +239,18 @@
                 <h3><code>while</code> statements</h3>
                 <pre><code class="javascript" data-trim>
                     while (i < 10) {
-                        text += 'The number is ' + i;
-                        i++;
+                        text += 'The number is ' + i;
+                        i++;
                         break;
                         continue;
                     }
 
                     do {
                         text += 'The number is ' + i;
-                        i++;
+                        i++;
                         break;
                         continue;
-                    }
+                    }
                     while (i < 10);
                 </code></pre>
             </section>
@@ -257,9 +258,9 @@
                 <h3><code>if</code> statements</h3>
                 <pre><code class="javascript" data-trim>
                     if (hour < 18) {
-                        greeting = 'Good day';
+                        greeting = 'Good day';
                     } else {
-                       greeting = 'Good evening';
+                       greeting = 'Good evening';
                     }
                 </code></pre>
             </section>
@@ -278,7 +279,7 @@
                             day = 'Saturday';
                     }
                 </code></pre>
-                Expression can evaluate to any type. For cases a strict comparison (using <code>===</code>) is done.
+                Expression can evaluate to any type. For expression in <i>cases</i> a strict comparison (using <code>===</code>) is done.
             </section>
             <section>
                 <h3><code>switch</code> statements</h3>
@@ -308,17 +309,18 @@
                     b = 6
                     c = a + b;
                 </code></pre>
-                <pre><code class="javascript" data-trim>
+                <pre><code class="javascript" data-trim data-noescape>
                     let f1 = (a) => {
-                        return a
+                        <mark>return a</mark>
                     }
                     let f2 = (a) => {
-                        return
-                            a
+                         <mark>return
+                             a</mark>
                     }
                     f1(2) → 2
                     f2(2) → undefined
                 </code></pre>
+                Semicolons are not required, but after <code>return</code> there has to be a value on the same line
             </section>
         </section>
 
@@ -343,6 +345,13 @@
                 <pre><code class="javascript" data-trim>
                     name(1, 'a', new Date());
                 </code></pre>
+                Functions are used as values:
+                <ul>
+                    <li>can be returned</li>
+                    <li>can be assigned to variables and object attributes</li>
+                    <li>can be an argument of other function</li>
+                </ul>
+                → We can define functions in function body
             </section>
             <section>
                 <h3>ES2015/ES6</h3>
@@ -377,25 +386,177 @@
                     // Call the generate with different generator method
                     console.log(generate(() => Math.ceil(Math.random() * 100)));
                 </code></pre>
-                <button onclick="randomGenOut1Click(this)">Click me!</button>
-                <button onclick="randomGenOut2Click(this)">Click me!</button>
+                <button id="randomGenOut1">Click me! (generator 1)</button>
+                <button id="randomGenOut2">Click me! (generator 2)</button>
                 <script>
-                    // Returns a function
-                    let getRandomGenerator = () => {
-                        return () => Math.random();
+                    (() => {
+                        // Returns a function
+                        let getRandomGenerator = () => {
+                            return () => Math.random();
+                        };
+
+                        // Parameter is a function
+                        let generate = (generator) => generator();
+
+                        document.getElementById('randomGenOut1').addEventListener('click', event => {
+                            event.target.innerHTML = generate(getRandomGenerator());
+                        });
+
+                        document.getElementById('randomGenOut2').addEventListener('click', event => {
+                            event.target.innerHTML = generate(() => Math.ceil(Math.random() * 100));
+                        });
+                    })();
+                </script>
+            </section>
+            <section>
+                <h3>ES2015/ES6 - Extended parameter handling</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    function f (x, y = 7, z = 42) { // ES2015/ES6 default values
+                        // ES5: y = y || 7; ...
+                        return x + y + z
+                    }
+                    f(1) === 50
+                </code></pre>
+                <pre><code class="javascript" data-trim data-noescape>
+                    function f (x, y, ...a) { // ES2015/ES6 rest parameter
+                        // ES5 a = Array.prototype.slice.call(arguments, 2);
+                        return (x + y) * a.length
+                    }
+                    f(1, 2, "hello", true, 7) === 9 // (1 + 2) * (a.length = 3)
+                </code></pre>
+            </section>
+        </section>
+
+
+        <section>
+            <section>
+                <h1>4</h1>
+                <h2>Scope and closures</h2>
+            </section>
+            <section>
+                <h3>Scope</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    let a = 1; // Global scope: everything registered under
+                    // window/script, eg. window.a = 1 <mark>(script in case of let)</mark>
+                    function f1() {
+                        let b = 2 + a; // Outer function scope
+                        // c is *not* visible here
+
+                        return () => {
+                            b += 2;
+                            let c = a + b; // Inner function scope
+                            return c;
+                        };
+                        // c is *not* visible here
+                    }
+                    // b is *not* visible here
+                    // c is *not* visible here
+                </code></pre>
+            </section>
+            <section>
+                <h3>Closures</h3>
+                Closures are functions that refer to independent (free) variables (variables that are used locally, but
+                defined in an enclosing scope). In other words, these functions 'remember' the environment in which they
+                were created.
+                <pre><code class="javascript" data-trim>
+                    let f2 = f1(); // A new closure created!
+                    a = f2(); // a and b were modified => window.a = 6, f2.f1.b = 5
+
+                    a = f2(); // a and b were modified => window.a = 13, f2.f1.b = 7
+
+                    let f3 = f1(); // A new closure created! f2.f1 !== f3.f1
+                </code></pre>
+            </section>
+            <section>
+                <h3>Closures</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    let a = 1; // Global scope
+                    function f1() {<div style="border: 0.3rem solid #6ca0e8">    let b = 2 + a; // Outer function scope
+                        // a is *not* visible here
+
+                        return () => {<div style="border: 0.3rem solid #cb4b16">        b += 2;
+                            let c = a + b; // Inner function scope
+                            <mark>debugger;</mark>
+                            return c;
+                    </div>    };</div>}
+                    let f2 = f1();
+                    let f3 = f1();
+                </code></pre>
+                <button id="closures1">Click me (f2)!</button>
+                <button id="closures2">Click me (f3)!</button>
+                <script>
+                    (() => {
+                        let a = 1; // Global scope
+                        function f1() {
+                            let b = 2 + a; // Outer function scope
+                            // a is *not* visible here
+
+                            return () => {
+                                b += 2;
+                                let c = a + b; // Inner function scope
+                                debugger;
+                                return c;
+                            };
+                        }
+                        let f2 = f1();
+                        let f3 = f1();
+
+                        document.getElementById('closures1').addEventListener('click', () => {
+                            f2();
+                        });
+                        document.getElementById('closures2').addEventListener('click', () => {
+                            f3();
+                        });
+                    })();
+                </script>
+            </section>
+        </section>
+
+
+        <section>
+            <section>
+                <h1>5</h1>
+                <h2>Objects</h2>
+            </section>
+            <section>
+                <h3>Object literals - JSON-like</h3>
+                <pre><code class="javascript" data-trim>
+                    let person = {
+                        firstName   : 'John',
+                        lastName    : 'Doe',
+                        age         : 50,
+                        eyeColor    : 'blue',
+                        doSomething : () => { ... }
                     };
 
-                    // Parameter is a function
-                    let generate = (generator) => generator();
+                    let f = () => {
+                        a                            : 'b',
+                        c                            : 'd'
+                        [ 'string' + Math.random() ] : 'e' // ES2015/ES6
+                        myMethod (a, b) { ... } // ES2015/ES6
+                    };
 
-                    function randomGenOut1Click(element) {
-                        element.innerHTML = generate(getRandomGenerator());
+                    f({ ... });
+                </code></pre>
+                Literals does not have type <br>→ they are instances of <code>Object</code>
+            </section>
+            <section>
+                <h3>Construction function</h3>
+                <pre><code class="javascript" data-trim>
+                    function Person(first, last, age, eye) {
+                        // this = {};
+                        this.firstName = first;
+                        this.lastName = last;
+                        this.age = age;
+                        this.eyeColor = eye;
+                        this.doSomething = () => { ... }
+                        // return this;
                     }
+                    let myFather = new Person('John', 'Doe', 50, 'blue');
+                    let myMother = new Person('Sally', 'Rally', 48, 'green');
 
-                    function randomGenOut2Click(element) {
-                        element.innerHTML = generate(() => Math.ceil(Math.random() * 100));
-                    }
-                </script>
+                    myFather instanceof Person === true
+                </code></pre>
             </section>
             <section>
                 <h3>Function's <code>this</code></h3>
@@ -457,166 +618,10 @@
                 </code></pre>
             </section>
             <section>
-                <h3>ES2015/ES6 - Extended parameter handling</h3>
-                <pre><code class="javascript" data-trim data-noescape>
-                    function f (x, y = 7, z = 42) { // ES2015/ES6 default values
-                        // ES5: y = y || 7; ...
-                        return x + y + z
-                    }
-                    f(1) === 50
-                </code></pre>
-                <pre><code class="javascript" data-trim data-noescape>
-                    function f (x, y, ...a) { // ES2015/ES6 rest parameter
-                        // ES5 a = Array.prototype.slice.call(arguments, 2);
-                        return (x + y) * a.length
-                    }
-                    f(1, 2, "hello", true, 7) === 9
-                </code></pre>
-            </section>
-        </section>
-
-
-        <section>
-            <section>
-                <h1>4</h1>
-                <h2>Scope and closures</h2>
-            </section>
-            <section>
-                <h3>Scope</h3>
-                <pre><code class="javascript" data-trim>
-                    let a = 1; // Global scope: everything registered under
-                    // window/script, eg. window.a = 1 (script in case of let)
-                    function f1() {
-                        let b = 2 + a; // Outer function scope
-                        // a is *not* visible here
-
-                        return () => {
-                            b += 2;
-                            let c = a + b; // Inner function scope
-                            return c;
-                        };
-                        // c is *not* visible here
-                    }
-                    // b is *not* visible here
-                    // c is *not* visible here
-                </code></pre>
-            </section>
-            <section>
-                <h3>Closures</h3>
-                Closures are functions that refer to independent (free) variables (variables that are used locally, but
-                defined in an enclosing scope). In other words, these functions 'remember' the environment in which they
-                were created.
-                <pre><code class="javascript" data-trim>
-                    // Global scope: everything registered under window/script,
-                    // eg. window.a (script in case of let)
-                    let f2 = f1(); // A new closure created!
-                    a = f2(); // a and b were modified => window.a = 6, f2.f1.b = 5
-
-                    a = f2(); // a and b were modified => window.a = 13, f2.f1.b = 7
-
-                    let f3 = f1(); // A new closure created! f2.f1 !== f3.f1
-                </code></pre>
-            </section>
-            <section>
-                <h3>Closures</h3>
-                <pre><code class="javascript" data-trim data-noescape>
-                    let a = 1; // Global scope
-                    function f1() {<div style="border: 0.3rem solid #6ca0e8">    let b = 2 + a; // Outer function scope
-                        // a is *not* visible here
-
-                        return () => {<div style="border: 0.3rem solid #cb4b16">        b += 2;
-                            let c = a + b; // Inner function scope
-                            <mark>debugger;</mark>
-                            return c;
-                    </div>    };</div>}
-                    let f2 = f1();
-                    let f3 = f1();
-                </code></pre>
-                <script>
-                    let a = 1; // Global scope
-                    function f1() {
-                        let b = 2 + a; // Outer function scope
-                        // a is *not* visible here
-
-                        return () => {
-                            b += 2;
-                            let c = a + b; // Inner function scope
-                            debugger;
-                            return c;
-                        };
-                    }
-                    let f2 = f1();
-                    let f3 = f1();
-                </script>
-                <button onclick="f2()">Click me (f2)!</button>
-                <button onclick="f3()">Click me (f3)!</button>
-            </section>
-            <section>
-                <h3>Block-scoped function (ES2015/ES6)</h3>
-                <pre><code class="javascript" data-trim>
-                    {
-                        function foo () { return 1 }
-                        foo() === 1
-                        {
-                            function foo () { return 2 }
-                            foo() === 2
-                        }
-                        foo() === 1
-                    }
-                </code></pre>
-            </section>
-        </section>
-
-
-        <section>
-            <section>
-                <h1>5</h1>
-                <h2>Objects</h2>
-            </section>
-            <section>
-                <h3>Object literals</h3>
-                <pre><code class="javascript" data-trim>
-                    let person = {
-                        firstName   : 'John',
-                        lastName    : 'Doe',
-                        age         : 50,
-                        eyeColor    : 'blue',
-                        doSomething : () => { ... }
-                    };
-
-                    let f = () => {
-                        a                            : 'b',
-                        c                            : 'd'
-                        [ 'string' + Math.random() ] : 'e' // ES2015/ES6
-                        myMethod (a, b) { ... }
-                    };
-
-                    f({ ... });
-                </code></pre>
-            </section>
-            <section>
-                <h3>Construction function</h3>
-                <pre><code class="javascript" data-trim>
-                    function person(first, last, age, eye) {
-                        // this = {};
-                        this.firstName = first;
-                        this.lastName = last;
-                        this.age = age;
-                        this.eyeColor = eye;
-                        this.doSomething : () => { ... }
-                        // return this;
-                    }
-                    let myFather = new person('John', 'Doe', 50, 'blue');
-                    let myMother = new person('Sally', 'Rally', 48, 'green');
-
-                    myFather instanceof person === true
-                </code></pre>
-            </section>
-            <section>
                 <h3>Object.prototype</h3>
                 <ul>
                     <li>All JavaScript objects inherit the properties and methods from their prototype.</li>
-                    <li>Objects created using an object literal, or with new Object(), inherit from a prototype called
+                    <li>Objects created using an object literal (or with new Object()) inherit from a prototype called
                         Object.prototype.
                     </li>
                     <li>The Object.prototype is on the top of the prototype chain.</li>
@@ -644,17 +649,51 @@
             </section>
             <section>
                 <h3>Prototype inheritance</h3>
-                <pre><code class="javascript" data-trim>
+                <pre><code class="javascript" data-trim data-noescape>
                     function Teacher(first, last, age, gender, interests, subject) {
-                        Person.call(this, first, last, age, gender, interests);
+                        <mark>Person.call(this, first, last, age, gender, interests);</mark>
                         this.subject = subject;
                     }
 
-                    Teacher.prototype = Object.create(Person.prototype);
-                    Teacher.prototype.constructor = Teacher;
+                    <mark>Teacher.prototype = Object.create(Person.prototype);
+                    Teacher.prototype.constructor = Teacher;</mark>
 
                     Teacher.prototype.greeting = function() { ... }
                 </code></pre>
+
+                <button id="protoInhr">Click me and check the console output!</button>
+                <script>
+                    (() => {
+                        function Person(first, last, age, gender) {
+                            this.firstName = first;
+                            this.lastName = last;
+                            this.age = age;
+                            this.gender = gender;
+                        }
+
+                        Person.prototype.nationality = 'English';
+
+                        Person.prototype.name = function() {
+                            return this.firstName + ' ' + this.lastName;
+                        };
+
+                        function Teacher(first, last, age, gender, interests, subject) {
+                            Person.call(this, first, last, age, gender);
+                            this.interests = interests;
+                            this.subject = subject;
+                        }
+
+                        Teacher.prototype = Object.create(Person.prototype);
+                        Teacher.prototype.constructor = Teacher;
+
+                        Teacher.prototype.greeting = function() { };
+
+                        document.getElementById('protoInhr').addEventListener('click', () => {
+                            console.info('new Teacher() instanceof Person === ' + (new Teacher() instanceof Person));
+                            console.dir(new Teacher());
+                        });
+                    })();
+                </script>
             </section>
             <section>
                 <h3>ES2015/ES6 Class</h3>
@@ -684,6 +723,11 @@
                         greeting() {
                             <mark>super.someMethod();</mark>
                         }
+                    }
+
+                    // ES5
+                    Teacher.prototype.greeting = () => {
+                        <mark>Person.prototype.greeting.apply(this, arguments);</mark>
                     }
                 </code></pre>
             </section>
@@ -790,6 +834,7 @@
 
                     Array.prototype.sort((a, b) => { ... return someNumber; })
                 </code></pre>
+                These functions do change content of the array
             </section>
             <section>
                 <h3>Array build-in methods (accessors)</h3>
@@ -801,6 +846,7 @@
                     Array.prototype.slice([begin[, end]])
                     Array.prototype.concat(value1[, value2[, ...[, valueN]]])
                 </code></pre>
+                Functions <code>join</code>, <code>slice</code> and <code>concat</code> do not change content of the array. They return a newly created array instead.
             </section>
             <section>
                 <h3>Array build-in methods (Iteration methods)</h3>
@@ -816,9 +862,6 @@
                     Array.prototype.map((currentValue, index, array) => newValue)
                     Array.prototype.reduce((accumulator, currentValue, index, array) =>
                         accumulator, initialValue)
-                    Array.prototype.reduceRight(
-                        (accumulator, currentValue, index, array) =>
-                            accumulator, initialValue)
                 </code></pre>
             </section>
             <section>
@@ -1051,7 +1094,7 @@
                 </ul>
                 <ul style="float: right">
                     <li>object</li>
-                    <li>null</li>
+                    <li>undefined</li>
                 </ul>
             </section>
             <section>
@@ -1061,13 +1104,10 @@
                     let a = new car
                     a instanceof car                            // true
                     a instanceof car.prototype.constructor      // true
-                    a.constructor === car.prototype.constructor // true
+                    car === car.prototype.constructor           // true
 
                     car.prototype.constructor = function () {}
                     a instanceof car.prototype.constructor      // false
-                    a instanceof car                            // true
-                    a instanceof a.constructor                  // false
-                    a.constructor = function() {}
                     a instanceof car                            // true
                 </code></pre>
             </section>
@@ -1084,7 +1124,7 @@
                 </ul>
             </section>
             <section>
-                <h3>Expressions</h3>
+                <h3>Conversions</h3>
                 <pre><code class="javascript" data-trim data-noescape>
                     let x = 16 + 4 + 'Volvo';
                     // x → 20Volvo
@@ -1157,7 +1197,7 @@
         <section>
             <section>
                 <h1>8</h1>
-                <h2>ES2015/ES6</h2>
+                <h2>ES2015/ES6 browser support</h2>
             </section>
             <section>
                 <h3>ES2015/ES6 Support</h3>
@@ -1222,6 +1262,7 @@
                     <li>es6-shim</li>
                     <li>core-js</li>
                 </ul>
+                <hr>
                 <h4>Other ES2015 features</h4>
                 <ul>
                     <li>intl → I18N API</li>
@@ -1755,7 +1796,7 @@
         <section>
             <section>
                 <h1>12</h1>
-                <h2>ES2015/ES6 Promise</h2>
+                <h2>Execution timing and ES2015/ES6 Promise</h2>
             </section>
             <section>
                 From MDN:
