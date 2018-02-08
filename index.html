@@ -1888,12 +1888,16 @@
                     clearInterval(handle);
                 </code></pre>
                 <ul>
-                    <li>Timing events are running in "separate" thread → the only way for asynchronous execution in
-                        JavaScript:
+                    <li>Timing events are running in "separate" thread
+                        <ul>
+                            <li>one of the few ways for asynchronous execution in JavaScript</li>
+                            <li>executed after specified period</li>
+                            <li>executed once the browser is idle</li>
+                        </ul>
                     </li>
                 </ul>
                 <pre><code class="javascript" data-trim>
-                    setTimeout(() => { console.log('I\'m running in a new thread.') });
+                    setTimeout(() => { console.log('I\'m running in a "new thread".') });
                 </code></pre>
             </section>
             <section>
@@ -2038,6 +2042,44 @@
                         → page renders and responds faster
                     </li>
                 </ul>
+            </section>
+            <section>
+                <h3>ECMAScript 2017 - ES8<br>(Sneak peek)</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    function resolveAfter2Seconds(x) {
+                      return new Promise(resolve => setTimeout(() => resolve(x), 2000));
+                    };
+
+                    // async function expression assigned to a variable
+                    const add = <mark>async</mark> function(x) {
+                      const a = <mark>await</mark> resolveAfter2Seconds(20);
+                      const b = <mark>await</mark> resolveAfter2Seconds(30);
+                      return x + a + b;
+                    };
+
+                    add(10).then(v => {
+                      console.log(v);  // prints 60 after <mark>4 seconds</mark>.
+                    });
+                </code></pre>
+            </section>
+            <section>
+                <h3>ECMAScript 2017 - ES8<br>(Sneak peek)</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    function resolveAfter2Seconds(x) {
+                      return new Promise(resolve => setTimeout(() => resolve(x), 2000));
+                    };
+
+                    // async function expression assigned to a variable
+                    const add = <mark>async</mark> function(x) {
+                      const a = resolveAfter2Seconds(20);
+                      const b = resolveAfter2Seconds(30);
+                      return x + <mark>await</mark> a + <mark>await</mark> b;
+                    };
+
+                    add(10).then(v => {
+                      console.log(v);  // prints 60 after <mark>2 seconds</mark>.
+                    });
+                </code></pre>
             </section>
         </section>
 
