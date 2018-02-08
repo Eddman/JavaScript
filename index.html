@@ -279,7 +279,8 @@
                             day = 'Saturday';
                     }
                 </code></pre>
-                Expression can evaluate to any type. For expression in <i>cases</i> a strict comparison (using <code>===</code>) is done.
+                Expression can evaluate to any type. For expression in <i>cases</i> a strict comparison (using
+                <code>===</code>) is done.
             </section>
             <section>
                 <h3><code>switch</code> statements</h3>
@@ -498,6 +499,7 @@
                                 return c;
                             };
                         }
+
                         let f2 = f1();
                         let f3 = f1();
 
@@ -673,7 +675,7 @@
 
                         Person.prototype.nationality = 'English';
 
-                        Person.prototype.name = function() {
+                        Person.prototype.name = function () {
                             return this.firstName + ' ' + this.lastName;
                         };
 
@@ -686,7 +688,8 @@
                         Teacher.prototype = Object.create(Person.prototype);
                         Teacher.prototype.constructor = Teacher;
 
-                        Teacher.prototype.greeting = function() { };
+                        Teacher.prototype.greeting = function () {
+                        };
 
                         document.getElementById('protoInhr').addEventListener('click', () => {
                             console.info('new Teacher() instanceof Person === ' + (new Teacher() instanceof Person));
@@ -846,7 +849,8 @@
                     Array.prototype.slice([begin[, end]])
                     Array.prototype.concat(value1[, value2[, ...[, valueN]]])
                 </code></pre>
-                Functions <code>join</code>, <code>slice</code> and <code>concat</code> do not change content of the array. They return a newly created array instead.
+                Functions <code>join</code>, <code>slice</code> and <code>concat</code> do not change content of the
+                array. They return a newly created array instead.
             </section>
             <section>
                 <h3>Array build-in methods (Iteration methods)</h3>
@@ -1322,12 +1326,16 @@
                     clearInterval(handle);
                 </code></pre>
                 <ul>
-                    <li>Timing events are running in "separate" thread → the only way for asynchronous execution in
-                        JavaScript:
+                    <li>Timing events are running in "separate" thread
+                        <ul>
+                            <li>one of the few ways for asynchronous execution in JavaScript</li>
+                            <li>executed after specified period</li>
+                            <li>executed once the browser is idle</li>
+                        </ul>
                     </li>
                 </ul>
                 <pre><code class="javascript" data-trim>
-                    setTimeout(() => { console.log('I\'m running in a new thread.') });
+                    setTimeout(() => { console.log('I\'m running in a "new thread".') });
                 </code></pre>
             </section>
             <section>
@@ -1379,11 +1387,12 @@
             <section>
                 <h3>Other BOM objects</h3>
                 <ul>
-                    <li>document → DOM root</li>
-                    <li>location → Information about current URL</li>
-                    <li>navigator → Information about browser</li>
-                    <li>history → Browser's history API - since HTML5 <code>pushState/replaceState(...)</code></li>
-                    <li>screen → Information about screen device</li>
+                    <li><code>document</code> → DOM root</li>
+                    <li><code>location</code> → Information about current URL</li>
+                    <li><code>navigator</code> → Information about browser</li>
+                    <li><code>history</code> → Browser's history API - since HTML5
+                        <code>pushState/replaceState(...)</code></li>
+                    <li><code>screen</code> → Information about screen device</li>
                 </ul>
             </section>
         </section>
@@ -1403,18 +1412,6 @@
                 </ul>
             </section>
             <section>
-                <h3>Properties vs. Attributes</h3>
-                <ul>
-                    <li>Property is a value stored in a browser's memory (DOM object) and can be changed</li>
-                    <li>Attribute is set by developer in HTML and is used by browser as initial value for the
-                        corresponding property.
-                    </li>
-                </ul>
-                <hr>
-                Properties are often referenced as attributes, but the actual attributes are stored as DOM Attribute
-                nodes.
-            </section>
-            <section>
                 <h3><code>window.document</code></h3>
                 Represents the web page.
                 <pre><code class="javascript" data-trim>
@@ -1429,7 +1426,7 @@
                 </code></pre>
             </section>
             <section>
-                <h3>Elements and nodes</h3>
+                <h3>Nodes vs. Elements</h3>
                 <ul>
                     <li>All DOM objects are <code>Node</code> instances.</li>
                     <li><code>Node.nodeType</code> represents the type of the node.</li>
@@ -1440,7 +1437,19 @@
                 </ul>
             </section>
             <section>
-                <h3>Useful properties</h3>
+                <h3>Properties vs. Attributes</h3>
+                <ul>
+                    <li>Property is a value stored in a browser's memory (DOM object) and can be changed</li>
+                    <li>Attribute is set by developer in HTML and is used by browser as initial value for the
+                        corresponding property.
+                    </li>
+                </ul>
+                <hr>
+                Properties are often referenced as attributes, but the actual attributes are stored as DOM Attribute
+                nodes.
+            </section>
+            <section>
+                <h3>Useful properties of elements</h3>
                 <pre><code class="javascript" data-trim>
                     // element.style allow access to all CSS properties
                     element.style.fontSize = '16px';
@@ -1481,7 +1490,7 @@
                         this.innerHTML = new Date() + '&lt;br&gt;Event type:' + event.type;
                     }
 
-                    let myBtn = document.getElementById('eventsTestButton');
+                    let myBtn = document.getElementById('eventsTest1Button');
                     myBtn<mark>.onmousedown</mark> = displayDate;
                     myBtn<mark>.onmouseup</mark> = displayDate;
                 </code></pre>
@@ -1490,15 +1499,17 @@
                     <li><b>event</b> - Reference to the Event object</li>
                 </ul>
                 <br>
-                <button type="button" id="eventsTestButton">Click me!</button>
+                <button type="button" id="eventsTest1Button">Click me!</button>
                 <script>
-                    function displayDate(event) {
-                        this.innerHTML = new Date() + '<br>Event type:' + event.type;
-                    }
+                    (() => {
+                        function displayDate(event) {
+                            this.innerHTML = new Date() + '<br>Event type:' + event.type;
+                        }
 
-                    let myBtn = document.getElementById('eventsTestButton');
-                    myBtn.onmousedown = displayDate;
-                    myBtn.onmouseup = displayDate;
+                        let myBtn = document.getElementById('eventsTest1Button');
+                        myBtn.onmousedown = displayDate;
+                        myBtn.onmouseup = displayDate;
+                    })();
                 </script>
             </section>
             <section>
@@ -1508,26 +1519,28 @@
                         this.innerHTML = new Date() + '&lt;br&gt;Event type:' + event.type;
                     }
 
-                    let myBtn2 = document.getElementById('eventListenersTestButton');
+                    let myBtn = document.getElementById('eventsTest2Button');
                     // Event bubbling
-                    myBtn2<mark>.addEventListener('mousedown', displayDate);</mark>
+                    myBtn<mark>.addEventListener('mousedown', displayDate);</mark>
                     // Event capturing
-                    myBtn2<mark>.addEventListener('mouseup', displayDate, true);</mark>
+                    myBtn<mark>.addEventListener('mouseup', displayDate, true);</mark>
                 </code></pre>
                 <ul>
                     <li><b>this</b> - Reference to the target DOM element</li>
                     <li><b>event</b> - Reference to the Event object</li>
                 </ul>
                 <br>
-                <button type="button" id="eventListenersTestButton">Click me!</button>
+                <button type="button" id="eventsTest2Button">Click me!</button>
                 <script>
-                    function displayDate(event) {
-                        this.innerHTML = new Date() + '<br>Event type:' + event.type;
-                    }
+                    (() => {
+                        function displayDate(event) {
+                            this.innerHTML = new Date() + '<br>Event type:' + event.type;
+                        }
 
-                    let myBtn2 = document.getElementById('eventListenersTestButton');
-                    myBtn2.addEventListener('mousedown', displayDate);
-                    myBtn2.addEventListener('mouseup', displayDate);
+                        let myBtn = document.getElementById('eventsTest2Button');
+                        myBtn.addEventListener('mousedown', displayDate);
+                        myBtn.addEventListener('mouseup', displayDate);
+                    })();
                 </script>
             </section>
             <section>
@@ -1549,23 +1562,31 @@
                     }
                     document.body.addEventListener('click', receiveEvent); ...
                 </code></pre>
-                <div id="div1">
-                    <div id="div2">
+                <div id="bubblingTest1Div1" class="div1">
+                    <div id="bubblingTest1Div2" class="div2">
                         <button type="button"
-                                id="bubblingTestButton"
-                                onclick="receiveEvent.bind(this)(event)">
+                                id="bubblingTest1Button"
+                                class="bubblingTestButton"
+                                onclick="bubblingTest1.bind(this)(event)">
                             Click me!
                         </button>
                     </div>
                 </div>
                 <script>
-                    function receiveEvent(event) {
-                        if (event.target === document.getElementById('bubblingTestButton'))
-                            window.alert('Hi, I\'m ' + this.tagName + '(' + this.id + ')');
-                    }
-                    document.body.addEventListener('click', receiveEvent);
-                    document.getElementById('div1').addEventListener('click', receiveEvent);
-                    document.getElementById('div2').addEventListener('click', receiveEvent);
+                    (() => {
+                        const testName = 'bubblingTest1';
+
+                        function receiveEvent(event) {
+                            if (event.target === document.getElementById(`${testName}Button`))
+                                window.alert('Hi, I\'m ' + this.tagName + '(' + this.className + ')');
+                        }
+
+                        document.body.addEventListener('click', receiveEvent);
+                        document.getElementById(`${testName}Div1`).addEventListener('click', receiveEvent);
+                        document.getElementById(`${testName}Div2`).addEventListener('click', receiveEvent);
+
+                        window[testName] = receiveEvent;
+                    })();
                 </script>
             </section>
             <section>
@@ -1578,29 +1599,37 @@
                             &lt;/button&gt;
                 </code></pre>
                 <pre><code class="javascript" data-trim data-noescape>
-                    function receiveEvent() {
+                    function receiveEvent<mark>(event)</mark> {
                         <mark>event.stopPropagation();</mark>
                         window.alert('Hi, I\'m ' + this.tagName + '(' + this.id + ')');
                     }
                 </code></pre>
-                <div id="div3">
-                    <div id="div4">
+                <div id="bubblingTest2Div1" class="div1">
+                    <div id="bubblingTest2Div2" class="div2">
                         <button type="button"
-                                id="bubblingTestButton2"
-                                onclick="receiveEvent2.bind(this)(event);">
+                                id="bubblingTest2Button"
+                                class="bubblingTestButton"
+                                onclick="bubblingTest2.bind(this)(event)">
                             Click me!
                         </button>
                     </div>
                 </div>
                 <script>
-                    function receiveEvent2(event) {
-                        event.stopPropagation();
-                        if (event.target === document.getElementById('bubblingTestButton2'))
-                            window.alert('Hi, I\'m ' + this.tagName + '(' + this.id + ')');
-                    }
-                    document.body.addEventListener('click', receiveEvent2);
-                    document.getElementById('div3').addEventListener('click', receiveEvent2);
-                    document.getElementById('div4').addEventListener('click', receiveEvent2);
+                    (() => {
+                        const testName = 'bubblingTest2';
+
+                        function receiveEvent(event) {
+                            event.stopPropagation();
+                            if (event.target === document.getElementById(`${testName}Button`))
+                                window.alert('Hi, I\'m ' + this.tagName + '(' + this.className + ')');
+                        }
+
+                        document.body.addEventListener('click', receiveEvent);
+                        document.getElementById(`${testName}Div1`).addEventListener('click', receiveEvent);
+                        document.getElementById(`${testName}Div2`).addEventListener('click', receiveEvent);
+
+                        window[testName] = receiveEvent;
+                    })();
                 </script>
             </section>
             <section>
@@ -1621,24 +1650,32 @@
                     document.getElementById('div2').addEventListener('click',
                         receiveEvent);
                 </code></pre>
-                <div id="div5">
-                    <div id="div6">
+                <div id="bubblingTest3Div1" class="div1">
+                    <div id="bubblingTest3Div2" class="div2">
                         <button type="button"
-                                id="bubblingTestButton3"
-                                onclick="receiveEvent3.bind(this)();">
+                                id="bubblingTest3Button"
+                                class="bubblingTestButton"
+                                onclick="bubblingTest3.bind(this)(event)">
                             Click me!
                         </button>
                     </div>
                 </div>
                 <script>
-                    function receiveEvent3() {
-                        if (event.target === document.getElementById('bubblingTestButton3'))
-                            window.alert('Hi, I\'m ' + this.tagName + '(' + this.id + ')');
-                    }
-                    document.body.addEventListener('click', receiveEvent3);
-                    document.getElementById('div5').addEventListener('click', receiveEvent3);
-                    document.getElementById('div6').addEventListener('click', (event) => event.stopPropagation());
-                    document.getElementById('div6').addEventListener('click', receiveEvent3);
+                    (() => {
+                        const testName = 'bubblingTest3';
+
+                        function receiveEvent(event) {
+                            if (event.target === document.getElementById(`${testName}Button`))
+                                window.alert('Hi, I\'m ' + this.tagName + '(' + this.className + ')');
+                        }
+
+                        document.body.addEventListener('click', receiveEvent);
+                        document.getElementById(`${testName}Div1`).addEventListener('click', receiveEvent);
+                        document.getElementById(`${testName}Div2`).addEventListener('click', (event) => event.stopPropagation());
+                        document.getElementById(`${testName}Div2`).addEventListener('click', receiveEvent);
+
+                        window[testName] = receiveEvent;
+                    })();
                 </script>
             </section>
             <section>
@@ -1659,57 +1696,90 @@
                     document.getElementById('div2').addEventListener('click',
                         receiveEvent);
                 </code></pre>
-                <div id="div7">
-                    <div id="div8">
+                <div id="bubblingTest4Div1" class="div1">
+                    <div id="bubblingTest4Div2" class="div2">
                         <button type="button"
-                                id="bubblingTestButton4"
-                                onclick="receiveEvent4.bind(this)();">
+                                id="bubblingTest4Button"
+                                class="bubblingTestButton"
+                                onclick="bubblingTest4.bind(this)(event)">
                             Click me!
                         </button>
                     </div>
                 </div>
                 <script>
-                    function receiveEvent4() {
-                        if (event.target === document.getElementById('bubblingTestButton4'))
-                            window.alert('Hi, I\'m ' + this.tagName + '(' + this.id + ')');
-                    }
-                    document.body.addEventListener('click', receiveEvent4);
-                    document.getElementById('div7').addEventListener('click', receiveEvent4);
-                    document.getElementById('div8').addEventListener('click', (event) => event.stopImmediatePropagation());
-                    document.getElementById('div8').addEventListener('click', receiveEvent4);
+                    (() => {
+                        const testName = 'bubblingTest4';
+
+                        function receiveEvent(event) {
+                            if (event.target === document.getElementById(`${testName}Button`))
+                                window.alert('Hi, I\'m ' + this.tagName + '(' + this.className + ')');
+                        }
+
+                        document.body.addEventListener('click', receiveEvent);
+                        document.getElementById(`${testName}Div1`).addEventListener('click', receiveEvent);
+                        document.getElementById(`${testName}Div2`).addEventListener('click', (event) => event.stopImmediatePropagation());
+                        document.getElementById(`${testName}Div2`).addEventListener('click', receiveEvent);
+
+                        window[testName] = receiveEvent;
+                    })();
                 </script>
             </section>
             <section>
-                <h3>Event bubbling</h3>
-                <div id="outerDiv" style="background-color: #cb4b16; padding: 2%; width: 50%">
-                    #outerDiv
-                    <div id="innerDiv" style="background-color: #b58900; padding: 2%">
-                        #innerDiv
-                        <br>
+                <h3>Event capture</h3>
+                <pre><code class="html" data-trim data-noescape>
+                    &lt;html&gt;
+                    <div style="border: 3px solid #b58900">&lt;body&gt;
+                    <div style="border: 3px solid #cb4b16">&lt;div id="div1"&gt;
+                    <div style="border: 3px solid #7f9f7f">    &lt;div id="div2"&gt;
+                    <div style="border: 3px solid #1a53a1">        &lt;button type="button"
+                                        id="captureTestButton"
+                                        onclick="receiveEvent.bind(this)()"&gt;
+                                Click me!
+                            &lt;/button&gt;</div>    &lt;/div&gt;</div>&lt;/div&gt;</div>&lt;/body&gt;</div>&lt;/html&gt;
+                </code></pre>
+                <pre><code class="javascript" data-trim data-noescape>
+                    function receiveEvent() {
+                        window.alert('Hi, I\'m ' + this.tagName + '(' + this.id + ')');
+                    }
+                    document.body.addEventListener('click', receiveEvent, <mark>true</mark>); ...
+                </code></pre>
+                <div id="captureTest1Div1" class="div1">
+                    <div id="captureTest1Div2" class="div2">
                         <button type="button"
-                                id="bubblingTestButton5"
-                                style="position: relative; left: 100%"
-                                onclick="receiveEvent5.bind(this)();">
-                            position: relative; left: 100%
+                                id="captureTest1Button"
+                                class="captureTestButton"
+                                onclick="captureTest1.bind(this)(event)">
+                            Click me!
                         </button>
                     </div>
                 </div>
                 <script>
-                    function receiveEvent5() {
-                        if (event.target === document.getElementById('bubblingTestButton5'))
-                            window.alert('Hi, I\'m ' + this.tagName + '(' + this.id + ')');
-                    }
-                    document.body.addEventListener('click', receiveEvent5);
-                    document.getElementById('outerDiv').addEventListener('click', receiveEvent5);
-                    document.getElementById('innerDiv').addEventListener('click', receiveEvent5);
+                    (() => {
+                        const testName = 'captureTest1';
+
+                        function receiveEvent(event) {
+                            if (event.target === document.getElementById(`${testName}Button`))
+                                window.alert('Hi, I\'m ' + this.tagName + '(' + this.className + ')');
+                        }
+
+                        document.body.addEventListener('click', receiveEvent, true);
+                        document.getElementById(`${testName}Div1`).addEventListener('click', receiveEvent, true);
+                        document.getElementById(`${testName}Div2`).addEventListener('click', receiveEvent, true);
+
+                        window[testName] = receiveEvent;
+                    })();
                 </script>
+            </section>
+            <section>
+                <h3>Event capture vs. bubbling</h3>
+                <img src="eventflow.png">
             </section>
             <section>
                 <h3><code>Event</code> object</h3>
                 <ul>
                     <li>Generated for each event automatically</li>
                     <li>Carries information about event</li>
-                    <li>Handles bubbling</li>
+                    <li>Handles bubbling/capture</li>
                 </ul>
                 <table style="font-size: 45%">
                     <tbody>
@@ -2504,8 +2574,8 @@
             {src: 'plugin/markdown/markdown.js'},
             {
                 src: 'plugin/highlight/highlight.js', async: true, callback: function () {
-                hljs.initHighlightingOnLoad();
-            }
+                    hljs.initHighlightingOnLoad();
+                }
             }
         ]
     });
