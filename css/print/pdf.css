@@ -91,6 +91,10 @@ ul, ol, div, p {
 	page-break-after: always;
 }
 
+.reveal .slides .pdf-page li {
+	margin: 0 0 0 30px;
+}
+
 .reveal .slides section {
 	visibility: visible !important;
 	display: block !important;

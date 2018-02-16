@@ -2159,7 +2159,7 @@
             <section>
                 <h3>Advance module systems</h3>
                 <ul>
-                    <li>Synchronous and asynchronous file loading</li>
+                    <li>Synchronous and asynchronous code loading</li>
                     <li>Introduce dependencies management and injection</li>
                     <li>Allow further optimizations → Tree-shaking</li>
                 </ul>
@@ -2431,7 +2431,7 @@
                 </code></pre>
             </section>
             <section>
-                <h3>What to use?</h3>
+                <h3>What module system should I choose?</h3>
                 <ul>
                     <li>In development use <b style="color: red">ES2015!</b>
                         <ul>
@@ -2446,7 +2446,7 @@
             <section>
                 <h3>Transpiling for development</h3>
                 <ul>
-                    <li>Babel can produce all module formats from ES2015 (CommonJS or AMD suite best;)</li>
+                    <li>Babel can produce all module formats from ES2015 (CommonJS or AMD suite the best;)</li>
                     <li>
                         Modules are loaded via SystemJS, RequireJS or any other tool:
                         <ul>
@@ -2476,7 +2476,7 @@
                 <h3>Tree-shaking</h3>
                 Why ES2015 modules in development?
                 <ul>
-                    <li class="fragment"><b>Webpack 2 or Rollup</b> operate over ES2015, AMD or CommonJS modules</li>
+                    <li class="fragment"><b>Webpack 2 or Rollup</b> operate over ES2015 (natively), AMD or CommonJS modules (with plugins)</li>
                     <li class="fragment">
                         Based on analysis of ES2015 modules they are able to "tree-shake" the final code → smaller
                         bundles → faster load times
