@@ -164,8 +164,6 @@
                         //c is visible here, but the value is undefined
                         for( let a = 0; a < 5; a++ ) {
                             //a is only visible in here (and in the for() parentheses)
-                            //and there is a separate a variable for each iteration of
-                            //the loop
                             //c is visible here
                         }
                         //a is *not* visible out here
@@ -228,12 +226,38 @@
             <section>
                 <h3><code>for</code> statements</h3>
                 <pre><code class="javascript" data-trim>
-                    for (i = 0; i < cars.length; i++) {
+                    for (let i = 0; i < cars.length; i++) {
                         text += cars[i] + '<br>';
                         break;
                         continue;
                     }
                 </code></pre>
+            </section>
+            <section>
+                <h3><code>for</code> statements</h3>
+                <pre><code class="javascript" data-trim data-noescape>
+                    let iterable = [3, 5, 7];
+                    iterable.foo = 'hello';
+
+                    for (const value <mark>of</mark> iterable) {
+                        // logs 3, 5, 7
+                        console.log(value);
+                    }
+
+                    for (const value <mark>in</mark> iterable) {
+                        // logs 0, 1, 2, "foo", "arrCustom", "objCustom"
+                        console.log(value);
+                    }
+                </code></pre>
+                <ul style="font-size: 0.75em">
+                    <li>Both <code>for...in</code> and <code>for...of</code> statements iterate over something.</li>
+                    <li>The <code>for...in</code> statement iterates over the enumerable properties of an object, in an
+                        arbitrary order.
+                    </li>
+                    <li>The <code>for...of</code> statement iterates over data that iterable object defines to be
+                        iterated over.
+                    </li>
+                </ul>
             </section>
             <section>
                 <h3><code>while</code> statements</h3>
@@ -321,7 +345,8 @@
                     f1(2) → 2
                     f2(2) → undefined
                 </code></pre>
-                Semicolons are not required, but after <code>return</code> there has to be a value on the same line
+                Semicolons are not required, but after <code>return</code> there has to be a value on the same line<br>
+                → otherwise <code>undefined</code>
             </section>
         </section>
 
@@ -346,7 +371,7 @@
                 <pre><code class="javascript" data-trim>
                     name(1, 'a', new Date());
                 </code></pre>
-                Functions are used as values:
+                Functions are treated as values:
                 <ul>
                     <li>can be returned</li>
                     <li>can be assigned to variables and object attributes</li>
@@ -522,7 +547,7 @@
             </section>
             <section>
                 <h3>Object literals - JSON-like</h3>
-                <pre><code class="javascript" data-trim>
+                <pre><code class="javascript" data-trim data-noescape>
                     let person = {
                         firstName   : 'John',
                         lastName    : 'Doe',
@@ -531,16 +556,16 @@
                         doSomething : () => { ... }
                     };
 
-                    let f = () => {
+                    let f = () => <mark>(</mark>{
                         a                            : 'b',
                         c                            : 'd'
                         [ 'string' + Math.random() ] : 'e' // ES2015/ES6
                         myMethod (a, b) { ... } // ES2015/ES6
-                    };
+                    }<mark>)</mark>;
 
                     f({ ... });
                 </code></pre>
-                Literals does not have type <br>→ they are instances of <code>Object</code>
+                Literals does not have type <br>→ they are instances of an <code>Object</code>
             </section>
             <section>
                 <h3>Construction function</h3>
@@ -576,7 +601,7 @@
 
                     f1.call({}, 1, 2); // this is replaced by {}
                     f1.apply({}, [1, 2]); // this is replaced by {}
-                    f2.bind({});
+                    f2.bind({}); // ES 5.1 only
                     f2(); // this is replaced by {}
                 </code></pre>
             </section>
@@ -592,27 +617,30 @@
 
                     function f(x) { return x(); }
                     f(a.f); // this === window / undefined
-                    f(a.f.bind(a)); // this === a
+                    f(a.f.bind(a)); // this === a; ES 5.1 only
                 </code></pre>
             </section>
             <section>
                 <h3>ES2015/ES6 - Lexical this</h3>
+                <ul>
+                    <li>In arrow functions only</li>
+                    <li><code>call</code>, <code>apply</code> and <code>bind</code> cannot be used</li>
+                </ul>
                 <pre><code class="javascript" data-trim data-noescape>
                     <mark>this</mark>.nums.forEach((v) => {
                         if (v % 5 === 0)
                             <mark>this</mark>.fives.push(v)
                     })
                 </code></pre>
-                ES5:
                 <pre><code class="javascript" data-trim data-noescape>
-                    //  variant 1
+                    // ECMAScript 5
                     <mark>var self = this;</mark>
                     this.nums.forEach(function (v) {
                         if (v % 5 === 0)
                             <mark>self</mark>.fives.push(v);
                     });
 
-                    //  variant 2 (since ECMAScript 5.1)
+                    // since ECMAScript 5.1
                     this.nums.forEach(function (v) {
                         if (v % 5 === 0)
                             this.fives.push(v);
@@ -850,7 +878,7 @@
                     Array.prototype.concat(value1[, value2[, ...[, valueN]]])
                 </code></pre>
                 Functions <code>join</code>, <code>slice</code> and <code>concat</code> do not change content of the
-                array. They return a newly created array instead.
+                array. They return a newly created array or string instead.
             </section>
             <section>
                 <h3>Array build-in methods (Iteration methods)</h3>
@@ -988,7 +1016,7 @@
             </section>
             <section>
                 <h3>Comparison Operators</h3>
-                <table style="font-size: 70%">
+                <table style="font-size: 0.7em">
                     <tbody>
                     <tr>
                         <th>Operator</th>
@@ -1057,7 +1085,7 @@
                 </table>
             </section>
             <section>
-                <h3>Type Operators</h3>
+                <h3>Type (and In) Operators</h3>
                 <table>
                     <tbody>
                     <tr>
@@ -1071,6 +1099,12 @@
                     <tr>
                         <td>instanceof</td>
                         <td>Returns true if an object is an instance of an object type</td>
+                    </tr>
+                    <tr><td colspan="2"></td></tr>
+
+                    <tr>
+                        <td>in</td>
+                        <td>The in operator returns true if the specified property is in the specified object or its prototype chain</td>
                     </tr>
                     </tbody>
                 </table>
@@ -1205,7 +1239,7 @@
             </section>
             <section>
                 <h3>ES2015/ES6 Support</h3>
-                <table style="font-size: 50%">
+                <table style="font-size: 0.5em">
                     <tr>
                         <!-- TABLE HEADERS -->
                         <th style="width: 20%">IE 10</th>
@@ -1781,7 +1815,7 @@
                     <li>Carries information about event</li>
                     <li>Handles bubbling/capture</li>
                 </ul>
-                <table style="font-size: 45%">
+                <table style="font-size: 0.45em">
                     <tbody>
                     <tr>
                         <th style="width:20%">Property</th>
@@ -1832,7 +1866,7 @@
             </section>
             <section>
                 <h3><code>Event</code> object</h3>
-                <table style="font-size: 50%;">
+                <table style="font-size: 0.5em">
                     <tbody>
                     <tr>
                         <th style="width:28%">Method</th>
@@ -1870,7 +1904,7 @@
             </section>
             <section>
                 From MDN:
-                <p style="font-size: 70%">A <code><strong>Promise</strong></code>&nbsp;is a proxy for a value not
+                <p style="font-size: 0.7em">A <code><strong>Promise</strong></code>&nbsp;is a proxy for a value not
                     necessarily known when the promise is created. It allows you to associate handlers with an
                     asynchronous action's eventual success value or failure reason. This lets asynchronous methods
                     return values like synchronous methods: instead of immediately returning the final value, the
@@ -2197,7 +2231,7 @@
             </section>
             <section>
                 <h3>CommonJS (CJS)</h3>
-                <ul style="font-size: 70%">
+                <ul style="font-size: 0.7em">
                     <li>Developed for server-side environments</li>
                     <li>Synchronous dependencies management</li>
                     <li>Allows cyclic dep. → unfinished copy of the "exports" object</li>
@@ -2261,7 +2295,7 @@
             </section>
             <section>
                 <h3>AMD</h3>
-                <ul style="font-size: 70%">
+                <ul style="font-size: 0.7em">
                     <li><b>A</b>synchronous <b>M</b>odule <b>D</b>efinition</li>
                     <li>Developed for browsers</li>
                     <li>Does not allow cyclic dependencies</li>
@@ -2288,7 +2322,7 @@
             </section>
             <section>
                 <h3>AMD</h3>
-                <ul style="font-size: 70%">
+                <ul style="font-size: 0.7em">
                     <li>Compatible with CommonJS</li>
                 </ul>
                 <pre><code class="javascript" data-trim data-noescape>
@@ -2328,7 +2362,7 @@
             </section>
             <section>
                 <h3>UMD</h3>
-                <ul style="font-size: 70%">
+                <ul style="font-size: 0.7em">
                     <li><b>U</b>niversal <b>M</b>odule <b>D</b>efinition</li>
                     <li>Supported in all environments</li>
                 </ul>
@@ -2352,7 +2386,7 @@
             </section>
             <section>
                 <h3>ES2015/ES6</h3>
-                <ul style="font-size: 70%">
+                <ul style="font-size: 0.7em">
                     <li>Allow cyclic dependencies</li>
                     <li>Can be statically analyzed</li>
                 </ul>
@@ -2476,7 +2510,9 @@
                 <h3>Tree-shaking</h3>
                 Why ES2015 modules in development?
                 <ul>
-                    <li class="fragment"><b>Webpack 2 or Rollup</b> operate over ES2015 (natively), AMD or CommonJS modules (with plugins)</li>
+                    <li class="fragment"><b>Webpack 2 or Rollup</b> operate over ES2015 (natively), AMD or CommonJS
+                        modules (with plugins)
+                    </li>
                     <li class="fragment">
                         Based on analysis of ES2015 modules they are able to "tree-shake" the final code → smaller
                         bundles → faster load times
