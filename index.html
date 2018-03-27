@@ -2125,13 +2125,14 @@
             </section>
             <section>
                 <h3>Why modules?</h3>
-                <ul>
+                <ul style="font-size: 0.9em;">
                     <li>
                         Traditional objects
                         <ul>
                             <li>Small units</li>
                             <li>Limited responsibility</li>
                             <li>Defined in global scope → name clashes</li>
+                            <li>Everything is public</li>
                         </ul>
                     </li>
                     <li>
@@ -2140,6 +2141,7 @@
                             <li>Composition of multiple objects, constants, etc. under single unit</li>
                             <li>Namespaces to bundle multiple objects → no name clashes</li>
                             <li>Transparent scopes</li>
+                            <li>Only API is <i>exported</i></li>
                         </ul>
                     </li>
                 </ul>
@@ -2169,6 +2171,7 @@
                 <h3>Modules - IIFE</h3>
                 <b>I</b>mmediately-<b>I</b>nvoked <b>F</b>unction <b>E</b>xpression
                 <pre><code class="javascript" data-trim data-noescape>
+                    a = b + c // without ; interpreted as a call to the last term
                     <mark>;</mark>(function(global) {
                         function Car() { ... }
 
@@ -2265,10 +2268,11 @@
                 <pre><code class="javascript" data-trim data-noescape>
                     // b.js
                     let a = require('./a.js'); // (1)
+                    a.foo(); // NOT OK (2)
                     // Can’t use a.foo in module body,
                     // but it will be filled in later
                     exports.bar = function () {
-                        a.foo(); // OK (2)
+                        a.foo(); // OK (3)
                     };
                 </code></pre>
                 <pre><code class="javascript" data-trim data-noescape>
@@ -2329,6 +2333,7 @@
                     // module B (b.js)
                     define(['./a.js', 'exports'],
                         function(moduleA, exports) {
+                            // Synchronously loaded module using CJS style "require"
                             let commonJSModule = require('./commonJSModule.js');
                             // Dynamically (and async.) loaded module
                             require(['./someOtherModule.js'], function (otherModule) {
@@ -2375,6 +2380,7 @@
                                 && typeof exports.nodeName !== 'string') {
                             factory(exports, module, require('someModule')); // CommonJS
                         } else {
+                            // IIFE
                             factory((root.moduleID = {}), // Browser globals
                                 { exports: root.moduleID, id: ''}, root.someModule);
                         }
@@ -2420,7 +2426,7 @@
                 </code></pre>
                 <pre><code class="javascript" data-trim data-noescape>
                     //------ b.js ------
-                    // Can be translated to a = require('a.js');
+                    // Can be translated to a = require('a.js'); (1)
                     import { foo } from 'a.js';
                     // Can’t use a.foo in module body,
                     // but it will be filled in later
@@ -2467,11 +2473,13 @@
             <section>
                 <h3>What module system should I choose?</h3>
                 <ul>
-                    <li>In development use <b style="color: red">ES2015!</b>
+                    <li>Write your code using <b style="color: red">ES2015!</b>
                         <ul>
                             <li>Clear and simple syntax</li>
+                            <li>Simple for IDE to parse and analyze</li>
                         </ul>
                     </li>
+                    <li class="fragment">In development use <b style="color: red">CJS or AMD.</b></li>
                     <li class="fragment">In production use <b style="color: red">IIFE!</b></li>
                 </ul>
                 <br>
@@ -2519,7 +2527,7 @@
                     </li>
                     <li class="fragment">Tree-shaking removes not used parts of code</li>
                     <li class="fragment">
-                        With ES2015 we import only parts of modules, AMD and CJS imports everything
+                        With ES2015 we import only parts of modules, AMD and CJS imports everything → Makes TS faster
                     </li>
                 </ul>
             </section>
@@ -2543,7 +2551,7 @@
                     <tbody>
                     <tr>
                         <td>Method <br>(GET, POST, PUT, DELETE)</td>
-                        <td>Status code</td>
+                        <td>Status code <br>eg. 200 OK, <br>401 Unauthorized</td>
                     </tr>
                     <tr>
                         <td>Request path</td>
@@ -2554,7 +2562,7 @@
                         <td>Headers</td>
                     </tr>
                     <tr>
-                        <td>Form data /<br>Query parameters</td>
+                        <td>Form data, <br>Query parameters,<br>Multipart data</td>
                         <td>Response body</td>
                     </tr>
                     </tbody>
@@ -2582,7 +2590,7 @@
                 <h3><code>XMLHttpRequest</code></h3>
                 XMLHttpRequest → HTTP client for JavaScript.
                 <pre><code class="javascript" data-trim data-noescape>
-                    let async = true;
+                    let async = true; // defaulting to true
                     let httpRequest = new XMLHttpRequest();
                     httpRequest.onreadystatechange = () => {
                         if (httpRequest.readyState === XMLHttpRequest.DONE) {
@@ -2602,7 +2610,7 @@
             <section>
                 <h3><code>HTTP headers and body</code></h3>
                 <pre><code class="javascript" data-trim data-noescape>
-                    let async = true;
+                    let async = true; // defaulting to true
                     let httpRequest = new XMLHttpRequest();
                     httpRequest.<mark>setRequestHeader('Content-Type',
                         'application/x-www-form-urlencoded')</mark>;
